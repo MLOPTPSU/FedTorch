@@ -28,7 +28,6 @@ from logs.logging import (log,
                           logging_load_time,
                           logging_globally)
 from logs.meter import define_local_training_tracker
-from comms.utils.eval import do_validate
 
 
 
@@ -86,9 +85,8 @@ def train_and_validate_federated(args, model_client, criterion, scheduler, optim
         # TODO: not make the server rank hard coded
         log("Starting round {} of training".format(n_c+1), args.debug)
         online_clients = set_online_clients(args)
-        if n_c == 0:
-            # This is the server
-            online_clients =  online_clients if 0 in online_clients else online_clients + [0]
+        if (n_c == 0) and  (0 not in online_clients):
+            online_clients += [0]
         online_clients_server = online_clients if 0 in online_clients else online_clients + [0]
         online_clients_group = dist.new_group(online_clients_server)
         
@@ -104,7 +102,6 @@ def train_and_validate_federated(args, model_client, criterion, scheduler, optim
             model_client.load_state_dict(model_server.state_dict())
             local_steps = 0
             if args.graph.rank in online_clients:
-                # for _ in range(args.num_epochs_per_comm):
                 is_sync = False
                 while not is_sync:
                     for _input, _target in train_loader:

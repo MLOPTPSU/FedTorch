@@ -7,7 +7,8 @@ from parameters import get_args
 from components.comps import create_components
 from utils.init_config import init_config
 from comms.trainings.distributed import train_and_validate
-from comms.trainings.federated import train_and_validate_federated
+from comms.trainings.federated import (train_and_validate_federated,
+                                       train_and_validate_federated_apfl)
 from logs.logging import log, configure_log, log_args
 
 
@@ -37,14 +38,14 @@ def main(args):
         # if args.federated_drfa:
         #     train_and_validate_federated_drfa(args, model, criterion, scheduler, optimizer, metrics)
         # else:
-            # if args.federated_type == 'apfl':
-            #     train_and_validate_federated_apfl(args, model, criterion, scheduler, optimizer, metrics)
+        if args.federated_type == 'apfl':
+            train_and_validate_federated_apfl(args, model, criterion, scheduler, optimizer, metrics)
             # elif args.federated_type =='afl':
             #     train_and_validate_federated_afl(args, model, criterion, scheduler, optimizer, metrics)
             # elif args.federated_type == 'perfedavg':
             #     train_and_validate_federated_perfedavg(args, model, criterion, scheduler, optimizer, metrics)
             # else:
-        if args.federated_type in ['fedavg','scaffold','fedgate','qsparse','fedprox']:
+        elif args.federated_type in ['fedavg','scaffold','fedgate','qsparse','fedprox']:
             train_and_validate_federated(args, model, criterion, scheduler, optimizer, metrics)
         else:
             raise NotImplementedError

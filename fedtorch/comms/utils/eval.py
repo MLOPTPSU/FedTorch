@@ -118,7 +118,7 @@ def do_validate(args,
 
     logging_display_val(args,performance, mode=data_mode, personal=model_mode=='personal')
 
-    if data_mode == 'test':
+    if data_mode == 'test' and not personal:
         # remember best prec@1 and save checkpoint.
         args.cur_prec1 = performance[0]
         is_best = args.cur_prec1 > args.best_prec1

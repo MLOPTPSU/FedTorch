@@ -100,9 +100,14 @@ def logging_display_training(args, tracker):
 def logging_display_val(args,performance, mode, personal=False):
     #TODO:improve this method
     if mode == 'test':
-        log('Test at batch: {}. Epoch: {}. Process: {}. Prec@1: {:.3f} Prec@5: {:.3f} Loss: {:.3f} Comm: {}'.format(
-            args.local_index, args.epoch, args.graph.rank, performance[0], performance[1], performance[2], args.rounds_comm),
-            debug=args.debug)
+        if personal:
+            log('Test at personal model at batch: {}. Epoch: {}. Process: {}. Prec@1: {:.3f} Prec@5: {:.3f} Loss: {:.3f} Comm: {}'.format(
+                args.local_index, args.epoch, args.graph.rank, performance[0], performance[1], performance[2], args.rounds_comm),
+                debug=args.debug)
+        else:
+            log('Test at batch: {}. Epoch: {}. Process: {}. Prec@1: {:.3f} Prec@5: {:.3f} Loss: {:.3f} Comm: {}'.format(
+                args.local_index, args.epoch, args.graph.rank, performance[0], performance[1], performance[2], args.rounds_comm),
+                debug=args.debug)
     else:
         pretext = []
         pretext.append('Personal' if personal else 'Global')
