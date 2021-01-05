@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-import gc
 import time
 from copy import deepcopy
 import numpy as np
 
 import torch
 import torch.distributed as dist
-import torchvision.transforms as transforms
 
-from components.metrics import accuracy, accuracy_per_class,accuracy2
 from components.scheduler import adjust_learning_rate
-from components.dataset import define_dataset, load_data_batch, \
-    _load_data_batch
+from components.dataset import define_dataset, load_data_batch
 from logs.checkpoint import save_to_checkpoint
-from comms.utils.flow_utils import is_stop, get_current_epoch, get_current_local_step, update_client_epoch, zero_copy, euclidean_proj_simplex,\
-                            projection_simplex_pivot, projection_simplex_bisection, projection_simplex_sort, is_sync_fed
+from comms.utils.flow_utils import (get_current_epoch, 
+                                    get_current_local_step,
+                                    zero_copy, 
+                                    is_sync_fed)
 from comms.utils.eval import inference, do_validate
 from comms.algorithms.federated import (fedavg_aggregation,
                                         fedgate_aggregation,
@@ -23,18 +21,14 @@ from comms.algorithms.federated import (fedavg_aggregation,
                                         distribute_model_server_control,
                                         set_online_clients,
                                         distribute_model_server)
-from logs.logging import log, logging_computing, logging_sync_time, \
-    logging_display_training, logging_display_val, logging_load_time, \
-    logging_globally, update_performancec_tracker, update_performance_per_class
-from logs.meter import define_local_training_tracker,\
-    define_val_tracker, evaluate_gloabl_performance, evaluate_local_performance, \
-        define_per_class_acc_tracker
-
-from components.optimizer import define_optimizer
-from components.metrics import define_metrics
+from logs.logging import (log,
+                          logging_computing,
+                          logging_sync_time,
+                          logging_display_training,
+                          logging_load_time,
+                          logging_globally)
+from logs.meter import define_local_training_tracker
 from comms.utils.eval import do_validate
-
-from utils.auxiliary import deepcopy_model
 
 
 
