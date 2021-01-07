@@ -48,35 +48,6 @@ def update_client_epoch(args):
     return
 
 
-# Optimization for the federated descent algorithm
-def compute_grad(gradMat, alpha):
-    if len(alpha.shape) == 1:
-        np.expand_dims(alpha,1)
-    return np.squeeze(2 * np.dot(np.dot(gradMat.T, gradMat),alpha))
-
-def pgd(gradMat, alpha0, eta=0.1, iter=500):
-    # Running Projected Gradient Descent with simplex projection
-    alpha0 = euclidean_proj_simplex(alpha0)
-    alpha = np.zeros((iter,alpha0.shape[0]))
-    alpha[0,:] = alpha0
-
-
-    for i in range(1,iter):
-        new_alpha = alpha[i-1,:] - (eta) * compute_grad(gradMat, alpha[i-1,:])
-        alpha[i,:] = euclidean_proj_simplex(new_alpha)
-    
-    return alpha[-1,:]
-
-# def solve_cvxopt(gradMat):
-#     d, c = gradMat.shape
-#     P = 2*matrix(np.dot(gradMat.T, gradMat))
-#     q = matrix(np.zeros(c))
-#     G = matrix(-1.0 * np.eye(c))
-#     h = matrix(np.zeros(c))
-#     A = matrix(np.ones(c), (1,c))
-#     b = matrix(1.0)
-#     sol = solvers.qp(P, q, G, h, A, b, show_progress=False)
-#     return np.squeeze(np.array(sol['x']))
 
 def euclidean_proj_simplex(v, s=1):
     """ Compute the Euclidean projection on a positive simplex
@@ -185,37 +156,6 @@ def projection_simplex_sort(v, z=1):
     
     return w
 
-def normalization(grad_mat,losses=None, type='norm2'):
-
-    if type=='norm2':
-        return grad_mat / np.linalg.norm(grad_mat,2,axis=0)
-    elif type=='norm1':
-        return grad_mat / np.linalg.norm(grad_mat,1,axis=0)
-    elif type=='loss':
-        if losses.any():
-            return grad_mat / losses
-        else:
-            raise ValueError('Losses should be passed for type "with_loss"')
-    elif type=='loss_norm':
-        if losses.any():
-            return (grad_mat * losses) / np.linalg.norm(grad_mat,2,axis=0)**2
-        else:
-            raise ValueError('Losses should be passed for type "with_loss"')
-    else:
-        raise NotImplementedError
-
-
-def find_descent_direction(gradMat):
-    gradMat_norm = normalization(gradMat.numpy())
-    try:
-        alpha = solve_cvxopt(gradMat_norm.astype('double'))
-    except ValueError:
-        print("Using PGD to find descent direction!")
-        alpha = pgd(gradMat_norm, np.random.random(gradMat_norm.shape[1]), eta=0.05, iter=100)
-    alpha = torch.tensor(np.expand_dims(alpha,1), dtype=gradMat.dtype)
-    return torch.mm(gradMat, alpha)
-
-
 def zero_copy(model,rnn=False):
     if rnn:
         model.hidden = None
@@ -295,11 +235,6 @@ def decompress_tensor(v,i,s):
     x_d[i.long()] = v
     x_d = x_d.reshape(s)
     return x_d
-
-def cos_sim(mat,eps=1e-8):
-    norm_mat = torch.clamp(mat.norm(dim=1),min=eps)
-    return torch.matmul(mat,mat.T) / torch.matmul(norm_mat.unsqueeze(1),
-                                                  norm_mat.unsqueeze(0))
 
 
 def alpha_update(model_local, model_personal,alpha, eta):

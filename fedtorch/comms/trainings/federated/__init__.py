@@ -1,5 +1,6 @@
 from comms.trainings.federated.main import train_and_validate_federated
 from comms.trainings.federated.apfl import train_and_validate_federated_apfl
+from comms.trainings.federated.drfa import train_and_validate_federated_drfa
 from comms.trainings.federated.afl import train_and_validate_federated_afl
 
 from comms.trainings.federated.centered.main import train_and_validate_federated_centered
