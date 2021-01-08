@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-# from cvxopt import matrix, solvers
-import torch
 from copy import deepcopy
 
-# solvers.options['show_progress'] = False
+import torch
+
+
 SCALE_QUANTIZE, ZERO_POINT_QUANTIZE, DTYPE_QUANTIZE = 0.001, 0, torch.qint8
 def get_current_epoch(args):
     if args.growing_batch_size:

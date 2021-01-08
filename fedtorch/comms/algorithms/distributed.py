@@ -7,9 +7,7 @@ import torch
 import torch.distributed as dist
 
 from utils.auxiliary import deepcopy_model
-from comms.utils.flow_utils import (find_descent_direction, 
-                                    normalization, 
-                                    quantize_tensor, 
+from comms.utils.flow_utils import (quantize_tensor, 
                                     dequantize_tensor,
                                     size_tensor, 
                                     compress_tensor, 
