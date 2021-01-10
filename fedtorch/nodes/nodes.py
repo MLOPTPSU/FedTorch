@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-import torch
+import platform
 from copy import deepcopy,copy
 
+import torch
 import torch.distributed as dist
 
 from components.comps import create_components
 from components.optimizer import define_optimizer
-from utils.init_config import init_config_centered
+from utils.init_config import init_config
 from components.dataset import define_dataset, _load_data_batch
 from comms.utils.flow_utils import zero_copy
 from logs.logging import log, configure_log, log_args
@@ -24,91 +25,48 @@ class Node():
         for k in tracker.keys():
             tracker[k].reset()
 
-
 class Client(Node):
-    def __init__(self, args, rank, Partitioner=None):
+    def __init__(self, args, rank):
         super(Client, self).__init__(rank)
         self.args = copy(args)
-        self.Partitioner = None
 
         # Initialize the node
         self.initialize()
         # Load the dataset
-        self.load_local_dataset(Partitioner)
+        self.load_local_dataset()
         # Generate auxiliary models
         self.gen_aux_models()
 
-        # Create trackers
-        self.local_val_tracker = define_val_tracker()
-        self.global_val_tracker = define_val_tracker()
-        if self.args.fed_personal:
-            self.local_personal_val_tracker = define_val_tracker()
-            self.global_personal_val_tracker = define_val_tracker()
-
-        if self.args.federated_sync_type == 'epoch':
-            self.args.local_step = self.args.num_epochs_per_comm * len(self.train_loader)
-            # Rebuild the sync scheme
-            configure_sync_scheme(self.args)
 
     def initialize(self):
-        init_config_centered(self.args, self.rank)
+        init_config(self.args)
         self.model, self.criterion, self.scheduler, self.optimizer, self.metrics = create_components(self.args)
         self.args.finish_one_epoch = False
+        # Create a model server on each client to keep a copy of the server model at each communication round.
+        self.model_server = deepcopy(self.model)
 
-        if self.rank==0:
-            configure_log(self.args)
-            log_args(self.args, debug=self.args.debug)
+        configure_log(self.args)
+        log_args(self.args, debug=self.args.debug)
+        log(
+        'Rank {} with block {} on {} {}-{}'.format(
+            self.args.graph.rank,
+            self.args.graph.ranks_with_blocks[self.args.graph.rank],
+            platform.node(),
+            'GPU' if self.args.graph.on_cuda else 'CPU',
+            self.args.graph.device
+            ),
+        debug=self.args.debug)
 
-    def make_model_consistent(self, ref_model):
-        """make all initial models consistent with the server model (rank 0)
-        """
-        print('consistent model for process (rank {})'.format(self.args.graph.rank))
-        for param, ref_param in zip(self.model.parameters(), ref_model.parameters()):
-            param.data = ref_param.data
-    
-    def load_local_dataset(self,Partitioner):
-        if self.args.data in ['emnist','synthetic','shakespeare']:
-            if self.args.fed_personal:
-                if self.args.federated_type == 'perfedavg':
-                    self.train_loader, self.test_loader, self.val_loader,  self.val_loader1 = define_dataset(self.args, shuffle=True, test=False)
-                    if len(self.val_loader1.dataset) == 1 and self.args.batch_size > 1:
-                        raise ValueError('Size of the validation dataset is too low!')
-                    # self.val_iterator = iter(self.val_loader1)
-                else:
-                    self.train_loader, self.test_loader, self.val_loader = define_dataset(self.args, shuffle=True, test=False)
-                if len(self.val_loader.dataset) == 1 and self.args.batch_size > 1:
-                    raise ValueError('Size of the validation dataset is too low!')
-            else:
-                self.train_loader, self.test_loader = define_dataset(self.args, shuffle=True,test=False)
-            
+        self.all_clients_group = dist.new_group(self.args.graph.ranks)
+
+    def load_local_dataset(self):
+        load_test = True if self.args.graph.rank ==0 else False
+        if self.args.fed_personal:
+            self.train_loader, self.test_loader, self.val_loader= define_dataset(self.args, shuffle=True, test=load_test)
         else:
-            if self.rank == 0:
-                if self.args.fed_personal:
-                    if self.args.federated_type == 'perfedavg':
-                        (self.train_loader, self.test_loader, self.val_loader, self.val_loader1), self.Partitioner = define_dataset(self.args,
-                                                                                                                                    shuffle=True,
-                                                                                                                                    test=False, 
-                                                                                                                                    return_partitioner=True)
-                        # self.val_iterator = iter(self.val_loader1)
-                    else:
-                        (self.train_loader, self.test_loader, self.val_loader), self.Partitioner = define_dataset(self.args, shuffle=True,
-                                                                                                    test=False, return_partitioner=True)
-                else:
-                    (self.train_loader, self.test_loader), self.Partitioner = define_dataset(self.args, shuffle=True,test=False,
-                                                                                            return_partitioner=True)
-            else:
-                if self.args.fed_personal:
-                    if self.args.federated_type == 'perfedavg':
-                        self.train_loader, self.test_loader, self.val_loader, self.val_loader1 = define_dataset(self.args, shuffle=True,
-                                                                                                test=False, Partitioner=Partitioner)
-                        self.val_iterator = iter(self.val_loader1)
-                    else:
-                        self.train_loader, self.test_loader, self.val_loader= define_dataset(self.args, shuffle=True,
-                                                                                                test=False, Partitioner=Partitioner)
-                else:
-                    self.train_loader, self.test_loader = define_dataset(self.args, shuffle=True, test=False, Partitioner=Partitioner)
+            self.train_loader, self.test_loader = define_dataset(self.args, shuffle=True, test=load_test)
         
-        if self.args.data in ['mnist','fashion_mnist','cifar10']:
+        if self.args.data in ['mnist','fashion_mnist','cifar10', 'cifar100']:
             self.args.classes = torch.arange(10)
         elif self.args.data in ['synthetic']:
             self.args.classes = torch.arange(5)
@@ -124,12 +82,15 @@ class Client(Node):
                 self.model_memory = zero_copy(self.model)
             elif self.args.federated_type == 'scaffold':
                 self.model_client_control = zero_copy(self.model)
+                self.model_server_control = zero_copy(self.model)
             elif self.args.federated_type == 'fedadam':
                 # Initialize the parameter for FedAdam https://arxiv.org/abs/2003.00295
                 self.args.fedadam_v =  [self.args.fedadam_tau ** 2] * len(list(self.model.parameters()))
             elif self.args.federated_type == 'apfl':
                 self.model_personal = deepcopy(self.model)
                 self.optimizer_personal = define_optimizer(self.args, self.model_personal)
+            elif self.args.federated_type == 'afl':
+                self.lambda_vector = torch.zeros(self.args.graph.n_nodes)
             elif self.args.federated_type == 'perfedme':
                 self.model_personal = deepcopy(self.model)
                 self.optimizer_personal = define_optimizer(self.args, self.model_personal)
@@ -137,78 +98,8 @@ class Client(Node):
                 self.full_loss = 0.0
             if self.args.federated_drfa:
                 self.kth_model  = zero_copy(self.model)
+                self.lambda_vector = torch.zeros(self.args.graph.n_nodes)
     
     def zero_avg(self):
         self.model_avg = zero_copy(self.model)
         self.model_avg_tmp = zero_copy(self.model)
-    
-
-
-class Server(Node):
-    def __init__(self, args, model_server, rank=0):
-        super(Server, self).__init__(0)
-        self.args = copy(args)
-        self.args.epoch=1
-        self.rnn = self.args.arch in ['rnn']
-        
-        # Initialize the node
-        self.initialize()
-        self.gen_aux_models()
-        # Create trackers
-        self.local_val_tracker = define_val_tracker()
-        self.global_val_tracker = define_val_tracker()
-        if self.args.fed_personal:
-            self.local_personal_val_tracker = define_val_tracker()
-            self.global_personal_val_tracker = define_val_tracker()
-        self.global_test_tracker = define_val_tracker()
-        
-        # Load test dataset for server
-        self.load_test_dataset()
-
-    def initialize(self):
-        self.model, self.criterion, self.scheduler, self.optimizer, self.metrics = create_components(self.args)
-
-    def zero_grad(self):
-        self.grad = zero_copy(self.model,self.rnn)
-    
-    def zero_avg(self):
-        self.model_avg = zero_copy(self.model,self.rnn)
-
-    def update_model(self):
-        # with torch.no_grad():
-        for p,g in zip(self.model.parameters(),self.grad.parameters()):
-            p.data -= self.args.lr_scale_at_sync * g.data
-    
-    def enable_grad(self,dataloader):
-        # Initialize the grad on model params
-        dataiter = iter(dataloader)
-        _input, _target = next(dataiter)
-        _input, _target = _load_data_batch(self.args, _input, _target)
-        self.optimizer.zero_grad()
-        output = self.model(_input)
-        loss = self.criterion(output, _target)
-        loss.backward()
-        self.optimizer.zero_grad()
-        return
-
-    def gen_aux_models(self):
-        if self.args.federated:
-            if self.args.federated_type == 'scaffold':
-                self.model_server_control = zero_copy(self.model)
-            elif self.args.federated_type == 'sgdap':
-                self.avg_noise_model = deepcopy(self.model)
-                self.avg_noise_optimizer = define_optimizer(self.args, self.avg_noise_model)
-            elif self.args.federated_type == 'afl':
-                self.lambda_vector = torch.zeros(self.args.graph.n_nodes)
-            if self.args.federated_drfa:
-                self.kth_model  = zero_copy(self.model)
-                self.lambda_vector = torch.zeros(self.args.graph.n_nodes)
-    
-    def load_test_dataset(self):
-        if self.args.fed_personal:
-            if self.args.federated_type == 'perfedavg':
-                _, self.test_loader,_,  _ = define_dataset(self.args, shuffle=True, test=True)
-            else:
-                _, self.test_loader, _ = define_dataset(self.args, shuffle=True, test=True)
-        else:
-            _, self.test_loader = define_dataset(self.args, shuffle=True,test=True)

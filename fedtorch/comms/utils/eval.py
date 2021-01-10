@@ -100,16 +100,11 @@ def do_validate(args,
         tracker['top5'].count = 1.0
         tracker['top5'].sum = 0.0
         tracker['top5'].avg = 0.0
-    if data_mode == 'test':
-        if model_mode=='personal':
-            performance = [
-                evaluate_gloabl_performance(tracker[x], group=group) for x in ['top1', 'top5','losses']
-            ]
-        else:
-            # Only the server performs the test, do not need for aggregation
-            performance = [
-                evaluate_local_performance(tracker[x]) for x in ['top1', 'top5','losses']
-            ]
+    if data_mode == 'test' and model_mode =='global':
+        # Only the server performs the test, do not need for aggregation
+        performance = [
+            evaluate_local_performance(tracker[x]) for x in ['top1', 'top5','losses']
+        ]
     else:
         performance = [
             evaluate_gloabl_performance(tracker[x], group) for x in ['top1', 'top5','losses']

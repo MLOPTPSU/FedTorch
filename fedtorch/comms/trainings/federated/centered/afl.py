@@ -77,11 +77,6 @@ def train_and_validate_afl_centered(Clients, Server):
             if Server.args.fed_personal:
                 do_validate_centered(Clients[oc].args, Server.model, Server.criterion, Server.metrics, Server.optimizer,
                     Clients[oc].val_loader, Server.global_personal_val_tracker, val=True, local=False)
-
-            if Server.args.federated_type == 'perfedavg':
-                for _input_val, _target_val in Clients[oc].val_loader1:
-                    _input_val, _target_val = load_data_batch(Clients[oc].args, _input_val, _target_val, tracker)
-                    break
             
             while not is_sync:
                 if Server.args.arch == 'rnn':

@@ -11,7 +11,7 @@ from components.optimizer import define_optimizer
 from utils.init_config import init_config, init_config_centered
 from components.dataset import define_dataset, _load_data_batch
 from comms.utils.flow_utils import zero_copy
-from nodes.nodes import Client, Server
+from nodes import ClientCentered, ServerCentered
 from comms.trainings.federated import (train_and_validate_federated_centered,
                                        train_and_validate_apfl_centered,
                                        train_and_validate_drfa_centered,
@@ -29,12 +29,12 @@ def main(args):
     ClientNodes ={}
     for i in range(args.num_workers):
         if args.data in ['emnist','synthetic'] or i==0:
-            ClientNodes[i] = Client(args,i)
+            ClientNodes[i] = ClientCentered(args,i)
         else:
-            ClientNodes[i] = Client(args,i, Partitioner=ClientNodes[0].Partitioner)
+            ClientNodes[i] = ClientCentered(args,i, Partitioner=ClientNodes[0].Partitioner)
         
 
-    ServerNode = Server(ClientNodes[0].args,ClientNodes[0].model) 
+    ServerNode = ServerCentered(ClientNodes[0].args,ClientNodes[0].model) 
     ServerNode.enable_grad(ClientNodes[0].train_loader)
     # train and evaluate model.
     if ServerNode.args.federated_drfa:
