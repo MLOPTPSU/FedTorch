@@ -3,8 +3,8 @@
 import argparse
 from os.path import join
 
-import components.models as models
-from logs.checkpoint import get_checkpoint_folder_name
+import fedtorch.components.models as models
+from fedtorch.logs.checkpoint import get_checkpoint_folder_name
 
 
 def get_args():

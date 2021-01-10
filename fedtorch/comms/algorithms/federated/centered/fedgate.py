@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from comms.utils.flow_utils import (quantize_tensor, 
-                                    dequantize_tensor,
-                                    compress_tensor,
-                                    decompress_tensor)
+from fedtorch.comms.utils.flow_utils import (quantize_tensor, 
+                                             dequantize_tensor,
+                                             compress_tensor,
+                                             decompress_tensor)
 
 def fedgate_aggregation_centered(OnlineClients, Server, online_clients, local_steps, lr, lambda_weight=None):
     """Aggregate gradients for variance reduced federated learning with decoupled learning rates.

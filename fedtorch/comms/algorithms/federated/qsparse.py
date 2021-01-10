@@ -4,8 +4,8 @@ import time
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
-from comms.utils.flow_utils import compress_tensor, decompress_tensor
+from fedtorch.utils.auxiliary import deepcopy_model
+from fedtorch.comms.utils.flow_utils import compress_tensor, decompress_tensor
 
 
 def qsparse_aggregation(args, model_server, model_client, group, online_clients, optimizer, model_memory, lambda_weight=None):

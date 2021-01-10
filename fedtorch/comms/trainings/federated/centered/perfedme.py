@@ -5,21 +5,21 @@ import numpy as np
 
 import torch
 
-from components.scheduler import adjust_learning_rate
-from components.dataset import load_data_batch
-from comms.utils.flow_utils import (get_current_epoch, 
-                                    get_current_local_step, 
-                                    is_sync_fed)
-from comms.utils.eval import inference
-from comms.utils.eval_centered import (do_validate_centered, 
-                                       log_validation_centered,
-                                       log_test_centered)
-from comms.algorithms.federated import fedavg_aggregation_centered, set_online_clients_centered
-from logs.logging import (log, 
-                          logging_sync_time,
-                          logging_load_time,
-                          logging_globally)
-from logs.meter import define_local_training_tracker
+from fedtorch.components.scheduler import adjust_learning_rate
+from fedtorch.components.dataset import load_data_batch
+from fedtorch.comms.utils.flow_utils import (get_current_epoch, 
+                                             get_current_local_step, 
+                                             is_sync_fed)
+from fedtorch.comms.utils.eval import inference
+from fedtorch.comms.utils.eval_centered import (do_validate_centered, 
+                                                log_validation_centered,
+                                                log_test_centered)
+from fedtorch.comms.algorithms.federated import fedavg_aggregation_centered, set_online_clients_centered
+from fedtorch.logs.logging import (log, 
+                                   logging_sync_time,
+                                   logging_load_time,
+                                   logging_globally)
+from fedtorch.logs.meter import define_local_training_tracker
 
 
 def train_and_validate_perfedme_centered(Clients, Server):

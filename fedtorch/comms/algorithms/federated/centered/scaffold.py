@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 
 def scaffold_aggregation_centered(OnlineClients, Server, online_clients, local_steps, lr, lambda_weight=None):
     """Aggregate gradients for federated learning using SCAFFOLD algorithm.

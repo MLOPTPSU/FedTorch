@@ -4,7 +4,7 @@ import time
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
+from fedtorch.utils.auxiliary import deepcopy_model
 
 def afl_aggregation(args, model_server, model_client, lambda_weight, loss, group, online_clients, optimizer):
     

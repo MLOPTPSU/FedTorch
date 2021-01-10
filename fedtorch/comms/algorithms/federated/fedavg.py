@@ -4,8 +4,8 @@ import time
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
-from comms.utils.flow_utils import quantize_tensor, dequantize_tensor
+from fedtorch.utils.auxiliary import deepcopy_model
+from fedtorch.comms.utils.flow_utils import quantize_tensor, dequantize_tensor
 
 
 def fedavg_aggregation(args, model_server, model_client, group, online_clients, optimizer, lambda_weight=None):

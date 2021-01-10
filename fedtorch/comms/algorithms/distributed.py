@@ -6,12 +6,12 @@ import time
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
-from comms.utils.flow_utils import (quantize_tensor, 
-                                    dequantize_tensor,
-                                    size_tensor, 
-                                    compress_tensor, 
-                                    decompress_tensor)
+from fedtorch.utils.auxiliary import deepcopy_model
+from fedtorch.comms.utils.flow_utils import (quantize_tensor, 
+                                             dequantize_tensor,
+                                             size_tensor, 
+                                             compress_tensor, 
+                                             decompress_tensor)
 
 """the frequency of communication"""
 def configure_sync_scheme(args):

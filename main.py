@@ -3,16 +3,13 @@ import platform
 
 import torch.distributed as dist
 
-from parameters import get_args
-from components.comps import create_components
-from utils.init_config import init_config
-from comms.trainings.distributed import train_and_validate
-from comms.trainings.federated import (train_and_validate_federated,
-                                       train_and_validate_federated_apfl,
-                                       train_and_validate_federated_drfa,
-                                       train_and_validate_federated_afl)
-from nodes import Client
-from logs.logging import log, configure_log, log_args
+from fedtorch.parameters import get_args
+from fedtorch.comms.trainings.distributed import train_and_validate
+from fedtorch.comms.trainings.federated import (train_and_validate_federated,
+                                                train_and_validate_federated_apfl,
+                                                train_and_validate_federated_drfa,
+                                                train_and_validate_federated_afl)
+from fedtorch.nodes import Client
 
 
 def main(args):

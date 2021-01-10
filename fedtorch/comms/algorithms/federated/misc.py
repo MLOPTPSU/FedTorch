@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
+from fedtorch.utils.auxiliary import deepcopy_model
 
 def set_online_clients(args):
     # Define online clients for the current round of communication for Federated Learning setting

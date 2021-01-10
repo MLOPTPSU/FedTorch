@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 import torch
 
-from components.metrics import accuracy, accuracy_per_class
-from logs.logging import (log, 
-                          logging_display_val, 
-                          logging_display_test_summary,
-                          update_performancec_tracker, 
-                          update_performance_per_class)
-from logs.meter import (define_val_tracker, 
-                        evaluate_gloabl_performance, 
-                        evaluate_local_performance, 
-                        define_per_class_acc_tracker)
-from components.dataset import _load_data_batch
-from logs.checkpoint import save_to_checkpoint
+from fedtorch.components.metrics import accuracy, accuracy_per_class
+from fedtorch.logs.logging import (log, 
+                                   logging_display_val, 
+                                   logging_display_test_summary,
+                                   update_performancec_tracker, 
+                                   update_performance_per_class)
+from fedtorch.logs.meter import (define_val_tracker, 
+                                 evaluate_gloabl_performance, 
+                                 evaluate_local_performance, 
+                                 define_per_class_acc_tracker)
+from fedtorch.components.dataset import _load_data_batch
+from fedtorch.logs.checkpoint import save_to_checkpoint
 
 def inference(model, criterion, metrics, _input, _target, classes=None, rnn=False):
     """Inference on the given model and get loss and accuracy."""

@@ -4,11 +4,11 @@ import time
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
-from comms.utils.flow_utils import (quantize_tensor, 
-                                    dequantize_tensor,
-                                    compress_tensor,
-                                    decompress_tensor)
+from fedtorch.utils.auxiliary import deepcopy_model
+from fedtorch.comms.utils.flow_utils import (quantize_tensor, 
+                                             dequantize_tensor,
+                                             compress_tensor,
+                                             decompress_tensor)
 
 def fedgate_aggregation(args, model_server, model_client, model_delta, model_memory, 
                         group, online_clients, optimizer, lr, local_steps, lambda_weight=None):

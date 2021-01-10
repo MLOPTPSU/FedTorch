@@ -5,7 +5,7 @@ from copy import deepcopy
 import torch
 import torch.distributed as dist
 
-from utils.auxiliary import deepcopy_model
+from fedtorch.utils.auxiliary import deepcopy_model
 
 def scaffold_aggregation(args, model_server, model_client, model_server_control, model_client_control,
                          group, online_clients, optimizer, lr, local_steps, lambda_weight=None):

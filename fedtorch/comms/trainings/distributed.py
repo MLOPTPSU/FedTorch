@@ -6,18 +6,18 @@ from copy import deepcopy
 import torch
 import torch.distributed as dist
 
-from components.scheduler import adjust_learning_rate
-from components.metrics import accuracy
-from components.dataset import define_dataset, load_data_batch, \
+from fedtorch.components.scheduler import adjust_learning_rate
+from fedtorch.components.metrics import accuracy
+from fedtorch.components.dataset import define_dataset, load_data_batch, \
     _load_data_batch
-from logs.checkpoint import save_to_checkpoint
-from comms.utils.eval import inference, do_validate
-from comms.utils.flow_utils import is_stop, get_current_epoch, get_current_local_step
-from comms.algorithms.distributed import aggregate_gradients
-from logs.logging import log, logging_computing, logging_sync_time, \
+from fedtorch.logs.checkpoint import save_to_checkpoint
+from fedtorch.comms.utils.eval import inference, do_validate
+from fedtorch.comms.utils.flow_utils import is_stop, get_current_epoch, get_current_local_step
+from fedtorch.comms.algorithms.distributed import aggregate_gradients
+from fedtorch.logs.logging import log, logging_computing, logging_sync_time, \
     logging_display_training, logging_display_val, logging_load_time, \
     logging_globally, update_performancec_tracker
-from logs.meter import define_local_training_tracker,\
+from fedtorch.logs.meter import define_local_training_tracker,\
     define_val_tracker, evaluate_gloabl_performance
 
 def train_and_validate(client):

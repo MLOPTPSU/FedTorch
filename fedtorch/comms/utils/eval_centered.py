@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import torch
 import numpy as np
 
-from components.dataset import _load_data_batch
-from comms.utils.eval import inference, inference_personal
-from logs.logging import log, update_performancec_tracker
+import torch
+
+from fedtorch.components.dataset import _load_data_batch
+from fedtorch.comms.utils.eval import inference, inference_personal
+from fedtorch.logs.logging import log, update_performancec_tracker
 
 
 def do_validate_centered(args, 

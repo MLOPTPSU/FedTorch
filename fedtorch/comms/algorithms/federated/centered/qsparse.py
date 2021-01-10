@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from comms.utils.flow_utils import (compress_tensor,
-                                    decompress_tensor)
+from fedtorch.comms.utils.flow_utils import (compress_tensor,
+                                             decompress_tensor)
 
 def qsparse_aggregation_centered(OnlineClients, Server, online_clients, local_steps, lr, lambda_weight=None):
     """Aggregate gradients for qsparse local sgd.

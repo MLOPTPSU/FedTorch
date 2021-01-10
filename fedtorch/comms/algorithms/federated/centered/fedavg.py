@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from comms.utils.flow_utils import quantize_tensor, dequantize_tensor
+
+from fedtorch.comms.utils.flow_utils import quantize_tensor, dequantize_tensor
 
 def fedavg_aggregation_centered(OnlineClients, Server, online_clients, lambda_weight=None):
     """Aggregate gradients for federated learning using FedAvg algorithm.

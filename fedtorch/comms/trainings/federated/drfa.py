@@ -6,33 +6,33 @@ import numpy as np
 import torch
 import torch.distributed as dist
 
-from components.scheduler import adjust_learning_rate
-from components.dataset import define_dataset, load_data_batch
-from logs.checkpoint import save_to_checkpoint
-from comms.utils.flow_utils import (get_current_epoch, 
-                                    get_current_local_step,
-                                    zero_copy, 
-                                    is_sync_fed,
-                                    euclidean_proj_simplex)
-from comms.algorithms.distributed import global_average
-from comms.utils.eval import inference, do_validate, inference_personal
-from comms.algorithms.federated import (fedavg_aggregation,
-                                        fedgate_aggregation,
-                                        scaffold_aggregation,
-                                        qsparse_aggregation, 
-                                        distribute_model_server_control,
-                                        set_online_clients,
-                                        distribute_model_server,
-                                        aggregate_models_virtual,
-                                        loss_gather)
-from logs.logging import (log,
-                          logging_computing,
-                          logging_sync_time,
-                          logging_display_training,
-                          logging_load_time,
-                          logging_globally)
-from logs.meter import define_local_training_tracker
-from components.optimizer import define_optimizer
+from fedtorch.components.scheduler import adjust_learning_rate
+from fedtorch.components.dataset import define_dataset, load_data_batch
+from fedtorch.logs.checkpoint import save_to_checkpoint
+from fedtorch.comms.utils.flow_utils import (get_current_epoch, 
+                                             get_current_local_step,
+                                             zero_copy, 
+                                             is_sync_fed,
+                                             euclidean_proj_simplex)
+from fedtorch.comms.algorithms.distributed import global_average
+from fedtorch.comms.utils.eval import inference, do_validate, inference_personal
+from fedtorch.comms.algorithms.federated import (fedavg_aggregation,
+                                                 fedgate_aggregation,
+                                                 scaffold_aggregation,
+                                                 qsparse_aggregation, 
+                                                 distribute_model_server_control,
+                                                 set_online_clients,
+                                                 distribute_model_server,
+                                                 aggregate_models_virtual,
+                                                 loss_gather)
+from fedtorch.logs.logging import (log,
+                                   logging_computing,
+                                   logging_sync_time,
+                                   logging_display_training,
+                                   logging_load_time,
+                                   logging_globally)
+from fedtorch.logs.meter import define_local_training_tracker
+from fedtorch.components.optimizer import define_optimizer
 
 
 def train_and_validate_federated_drfa(client):
