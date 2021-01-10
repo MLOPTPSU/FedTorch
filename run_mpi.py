@@ -50,7 +50,6 @@ def main(args):
         '--fed_personal_alpha': args.fed_personal_alpha,
         '--fedprox_mu': args.fedprox_mu,
         '--perfedavg_beta': 0.03,
-        # '--fed_meta': False,
         '--sensitive_feature':args.sensitive_feature,
         '--unbalanced':args.unbalanced,
         '--batch_size':args.batch_size, 
