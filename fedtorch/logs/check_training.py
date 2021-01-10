@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import torch
 
-from logs.logging import log
+from fedtorch.logs.logging import log
 
 
 """check the arguments for training."""

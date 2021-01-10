@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-import torch
 from copy import deepcopy,copy
 
-import torch.distributed as dist
+import torch
 
-from components.comps import create_components
-from components.optimizer import define_optimizer
-from utils.init_config import init_config_centered
-from components.dataset import define_dataset, _load_data_batch
-from comms.utils.flow_utils import zero_copy
-from logs.logging import log, configure_log, log_args
-from logs.meter import define_val_tracker
-from comms.communication import configure_sync_scheme
+from fedtorch.components.comps import create_components
+from fedtorch.components.optimizer import define_optimizer
+from fedtorch.utils.init_config import init_config_centered
+from fedtorch.components.dataset import define_dataset, _load_data_batch
+from fedtorch.comms.utils.flow_utils import zero_copy
+from fedtorch.logs.logging import log, configure_log, log_args
+from fedtorch.logs.meter import define_val_tracker
+from fedtorch.comms.communication import configure_sync_scheme
 
 class Node():
     def __init__(self, rank):

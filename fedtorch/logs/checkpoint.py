@@ -6,7 +6,7 @@ from os.path import join, isfile
 
 import torch
 
-from utils.op_paths import build_dirs, remove_folder
+from fedtorch.utils.op_paths import build_dirs, remove_folder
 
 
 def get_checkpoint_folder_name(args):

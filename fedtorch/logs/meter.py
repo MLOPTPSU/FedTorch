@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from comms.communication import global_average
+from fedtorch.comms.algorithms.distributed import global_average
 
 
 def define_local_training_tracker():

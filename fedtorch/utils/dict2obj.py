@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
 """transofrm dict to object."""
-
 
 class dict2obj(object):
     def __init__(self, d):

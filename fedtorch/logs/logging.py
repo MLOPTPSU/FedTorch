@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import os
 import time
 import logging
 
-from utils.op_files import write_txt
+from fedtorch.utils.op_files import write_txt
 
 
 def record(content, path):

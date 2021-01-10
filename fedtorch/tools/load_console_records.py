@@ -5,8 +5,8 @@ import os
 import numpy as np
 import torch
 
-from utils.auxiliary import str2time, is_float
-from utils.op_files import read_txt
+from fedtorch.utils.auxiliary import str2time, is_float
+from fedtorch.utils.op_files import read_txt
 
 ZERO_TIME_TRAIN=None
 ZERO_TIME_TEST=None

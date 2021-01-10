@@ -125,7 +125,7 @@ if __name__ == "__main__":
   parser.add_argument('-b', '--batch_size', default=50, type=int)
   parser.add_argument('-c', '--num_comms', default=100, type=int)
   parser.add_argument('-k', '--online_client_rate', default=1.0, type=float)
-  parser.add_argument('-p', '--data_path', default='../data', type=str)
+  parser.add_argument('-p', '--data_path', default='./data', type=str)
   parser.add_argument('-t', '--federated_type', default='fedavg', type=str)
   parser.add_argument('-i', '--iid', action='store_true')
   parser.add_argument('-s', '--local_steps', default=1, type=int)

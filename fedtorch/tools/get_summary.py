@@ -2,8 +2,8 @@
 import re
 import os
 
-from utils.op_paths import list_files
-from tools.load_console_records import get_console_records, get_checkpoint_args
+from fedtorch.utils.op_paths import list_files
+from fedtorch.tools.load_console_records import get_console_records, get_checkpoint_args
 
 """load records."""
 

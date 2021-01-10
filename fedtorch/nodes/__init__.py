@@ -1,2 +1,2 @@
-from nodes.nodes import Client
-from nodes.nodes_centered import ClientCentered, ServerCentered
+from fedtorch.nodes.nodes import Client
+from fedtorch.nodes.nodes_centered import ClientCentered, ServerCentered

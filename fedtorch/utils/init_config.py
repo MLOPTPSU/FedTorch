@@ -2,9 +2,9 @@
 import torch
 import torch.distributed as dist
 
-from logs.checkpoint import init_checkpoint
-from comms.communication import configure_sync_scheme
-from utils.topology import FCGraph
+from fedtorch.logs.checkpoint import init_checkpoint
+from fedtorch.comms.communication import configure_sync_scheme
+from fedtorch.utils.topology import FCGraph
 
 
 def set_local_stat(args):
