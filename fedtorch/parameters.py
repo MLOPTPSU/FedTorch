@@ -59,7 +59,6 @@ def get_args():
     parser.add_argument('--fed_personal', default=False, type=str2bool)    
     parser.add_argument('--fed_personal_alpha', default=0.5, type=float) 
     parser.add_argument('--fed_adaptive_alpha', default=False, type=str2bool)
-    parser.add_argument('--fed_meta', default=False, type=str2bool) 
     parser.add_argument('--fed_personal_test', default=False, type=str2bool)
     parser.add_argument('--fedadam_beta', default=0.9, type=float)  
     parser.add_argument('--fedadam_tau', default=0.1, type=float)
