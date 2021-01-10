@@ -4,9 +4,9 @@ import time
 import torch
 import numpy as np
 
-from logs.logging import log
-from components.datasets.partition import DataPartitioner, GrowingBatchPartitioner, FederatedPartitioner
-from components.datasets.prepare_data import get_dataset
+from fedtorch.logs.logging import log
+from fedtorch.components.datasets.partition import DataPartitioner, GrowingBatchPartitioner, FederatedPartitioner
+from fedtorch.components.datasets.prepare_data import get_dataset
 
 
 def _load_data_batch(args, _input, _target):

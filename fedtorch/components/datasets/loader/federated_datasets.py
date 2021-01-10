@@ -10,8 +10,6 @@ import warnings
 
 from scipy.special import softmax
 
-
-
 class EMNIST(Dataset):
 
     @property

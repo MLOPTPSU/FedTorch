@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from components.optimizers.sgd import SGD
-from components.optimizers.adam import AdamW
+from fedtorch.components.optimizers.sgd import SGD
+from fedtorch.components.optimizers.adam import AdamW
 
 
 def define_optimizer(args, model):

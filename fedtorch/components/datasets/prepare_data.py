@@ -5,14 +5,13 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-from components.datasets.loader.imagenet_folder import define_imagenet_folder
-from components.datasets.loader.svhn_folder import define_svhn_folder
-from components.datasets.loader.epsilon_or_rcv1_folder import define_epsilon_or_rcv1_or_MSD_folder
-from components.datasets.loader.synthetic_folder import define_synthetic_folder
-from components.datasets.loader.adult_loader import AdultDataset, AdultDatasetTorch
-from components.datasets.loader.federated_datasets import EMNIST, Synthetic, Shakespeare
-from components.datasets.loader.libsvm_datasets import LibSVMDataset
-
+from fedtorch.components.datasets.loader.imagenet_folder import define_imagenet_folder
+from fedtorch.components.datasets.loader.svhn_folder import define_svhn_folder
+from fedtorch.components.datasets.loader.epsilon_or_rcv1_folder import define_epsilon_or_rcv1_or_MSD_folder
+from fedtorch.components.datasets.loader.synthetic_folder import define_synthetic_folder
+from fedtorch.components.datasets.loader.adult_loader import AdultDataset, AdultDatasetTorch
+from fedtorch.components.datasets.loader.federated_datasets import EMNIST, Synthetic, Shakespeare
+from fedtorch.components.datasets.loader.libsvm_datasets import LibSVMDataset
 
 def _get_cifar(name, root, split, transform, target_transform, download):
     is_train = (split == 'train')

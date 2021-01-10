@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import torchvision.datasets as datasets
 
-from logs.logging import log
-from components.datasets.preprocess_toolkit import get_transform
-from components.datasets.loader.utils import IMDBPT
+from fedtorch.logs.logging import log
+from fedtorch.components.datasets.preprocess_toolkit import get_transform
+from fedtorch.components.datasets.loader.utils import IMDBPT
 
 
 def define_imagenet_folder(args, name, root, flag, cuda=True):

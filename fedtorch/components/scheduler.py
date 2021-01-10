@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from components.optimizers.learning import get_lr_scheduler
+from fedtorch.components.optimizers.learning import get_lr_scheduler
 
 
 def define_scheduler(args):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from logs.logging import log
-from components.datasets.loader.utils import IMDBPT
+from fedtorch.logs.logging import log
+from fedtorch.components.datasets.loader.utils import IMDBPT
 
 
 # TODO: to be removed. Use federated_datasets.py 

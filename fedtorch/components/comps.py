@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from components.optimizer import define_optimizer
-from components.criterion import define_criterion
-from components.metrics import define_metrics
-from components.model import define_model
-from components.scheduler import define_scheduler
-from logs.checkpoint import maybe_resume_from_checkpoint
+from fedtorch.components.optimizer import define_optimizer
+from fedtorch.components.criterion import define_criterion
+from fedtorch.components.metrics import define_metrics
+from fedtorch.components.model import define_model
+from fedtorch.components.scheduler import define_scheduler
+from fedtorch.logs.checkpoint import maybe_resume_from_checkpoint
 
 
 def create_components(args):

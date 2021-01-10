@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from comms.communication import global_average
-from logs.meter import AverageMeter
-
 import torch
+
+from fedtorch.comms.communication import global_average
+from fedtorch.logs.meter import AverageMeter
 
 
 def define_metrics(args, model):
@@ -71,14 +71,6 @@ def accuracy(output, target, topk=(1,), rnn=False):
         correct = pred.eq(target.view_as(pred)).float().mean()
         res.append(correct.mul_(100.0).item())
     return res
-
-#TODO:remove this method
-def accuracy2(output,target):
-    batch_size = target.size(0)
-    _ , pred = torch.max(output,1)
-    target = torch.squeeze(target)
-    correct = pred.eq(target)
-    return [correct.float().sum().mul_(100.0/batch_size).item()]
 
 
 

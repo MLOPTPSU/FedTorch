@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import torch.distributed as dist
 
-import components.models as models
+import fedtorch.components.models as models
 
 
 def define_model(args):

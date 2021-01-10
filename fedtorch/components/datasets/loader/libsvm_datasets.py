@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import torch
 import os
 import glob
 import numpy as np
 import warnings
 import urllib.request
-
 from sklearn.datasets import load_svmlight_file
 from sklearn.preprocessing import StandardScaler
+
+import torch
 from torch.utils.data import Dataset
 
 
