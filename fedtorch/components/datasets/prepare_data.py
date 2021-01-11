@@ -5,10 +5,6 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-from fedtorch.components.datasets.loader.imagenet_folder import define_imagenet_folder
-from fedtorch.components.datasets.loader.svhn_folder import define_svhn_folder
-from fedtorch.components.datasets.loader.epsilon_or_rcv1_folder import define_epsilon_or_rcv1_or_MSD_folder
-from fedtorch.components.datasets.loader.synthetic_folder import define_synthetic_folder
 from fedtorch.components.datasets.loader.adult_loader import AdultDataset, AdultDatasetTorch
 from fedtorch.components.datasets.loader.federated_datasets import EMNIST, Synthetic, Shakespeare
 from fedtorch.components.datasets.loader.libsvm_datasets import LibSVMDataset
@@ -64,17 +60,6 @@ def _get_mnist(root, split, transform, target_transform, download):
                           download=download)
 
 def _get_emnist(root, split, client_id, download, val=False):
-    # if split == 'train':
-    #     train_dataset = EMNIST(root,'train',client_id=client_id, download=download)
-    #     if val:
-    #         val_dataset = EMNIST(root,'val',client_id=client_id, download=download)
-    #         dataset = (train_dataset, val_dataset)
-    #     else:
-    #         dataset = train_dataset
-    # else:
-    #     dataset = EMNIST(root,'test', download=download)
-    
-    # return dataset
     if split == 'train':
         return EMNIST(root,'train',client_id=client_id, download=download)
     elif split == 'val':
@@ -115,58 +100,13 @@ def _get_stl10(root, split, transform, target_transform, download):
                           download=download)
 
 
-def _get_svhn(root, split, transform, target_transform, download):
-    is_train = (split == 'train')
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-    ])
-    return define_svhn_folder(root=root,
-                              is_train=is_train,
-                              transform=transform,
-                              target_transform=target_transform,
-                              download=download)
-
-
-def _get_imagenet(args, name, datasets_path, split):
-    is_train = (split == 'train')
-    root = os.path.join(
-        datasets_path,
-        'lmdb' if 'downsampled' not in name else 'lmdb_32x32'
-        ) if args.use_lmdb_data else datasets_path
-
-    if is_train:
-        root = os.path.join(root, 'train{}'.format(
-            '' if not args.use_lmdb_data else '.lmdb')
-        )
-    else:
-        root = os.path.join(root, 'val{}'.format(
-            '' if not args.use_lmdb_data else '.lmdb')
-        )
-    return define_imagenet_folder(args,
-        name=name, root=root, flag=args.use_lmdb_data,
-        cuda=args.graph.on_cuda)
-
-
 def _get_epsilon_or_rcv1_or_MSD(args, root, name, split):
-    # root = os.path.join(root, '{}_{}.lmdb'.format(name, split))
-    # return define_epsilon_or_rcv1_or_MSD_folder(args, root)
     return LibSVMDataset(root,name,split)
 
 
 def _get_synthetic(args, root, name, split):
     reg = 'least_square' in args.arch
-    # pattern = split == 'train'
-    # if pattern:
-    #     root = os.path.join(root, '{}_{}_{}.lmdb'.format(name, args.graph.rank, split))
-    # else:
-    #     root = os.path.join(root, '{}_{}.lmdb'.format(name, split))
-    # return define_synthetic_folder(args, root, pattern=pattern)
-    if args.federated_type == 'mafl':
-        dim = 0 #The dimension will be randomly decided
-    else:
-        dim = 60
+    dim=60
     return Synthetic(root, split=split, client_id=args.graph.rank,
                     num_tasks=args.graph.n_nodes, alpha=args.synthetic_alpha, 
                     beta=args.synthetic_beta, regression=reg,num_dim=dim)
@@ -175,24 +115,17 @@ def _get_synthetic(args, root, name, split):
 
 def _get_adult(args, root, name, split):
     dataset = AdultDataset(root)
-    # dataset = AdultDataset1(root)
     return AdultDatasetTorch(dataset, split)
 
 
 def get_dataset(
         args, name, datasets_path, split='train', transform=None,
         target_transform=None, download=True):
-    # create data folder if it does not exist.
-    # if args.data =='synthetic':
-    #     root = os.path.join(datasets_path, name + '{}-{}'.format(args.synthetic_alpha, args.synthetic_beta))
-    # else:
     root = os.path.join(datasets_path, name)
 
     if name == 'cifar10' or name == 'cifar100':
         return _get_cifar(
             name, root, split, transform, target_transform, download)
-    elif name == 'svhn':
-        return _get_svhn(root, split, transform, target_transform, download)
     elif name == 'mnist':
         return _get_mnist(root, split, transform, target_transform, download)
     elif name == 'emnist':
@@ -201,8 +134,6 @@ def get_dataset(
         return _get_fashion_mnist(root, split, transform, target_transform, download)
     elif name == 'stl10':
         return _get_stl10(root, split, transform, target_transform, download)
-    elif 'imagenet' in name:
-        return _get_imagenet(args, name, datasets_path, split)
     elif name == 'epsilon':
         return _get_epsilon_or_rcv1_or_MSD(args, root, name, split)
     elif name == 'rcv1':

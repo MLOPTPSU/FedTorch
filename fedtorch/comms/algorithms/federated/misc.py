@@ -10,9 +10,6 @@ from fedtorch.utils.auxiliary import deepcopy_model
 def set_online_clients(args):
     # Define online clients for the current round of communication for Federated Learning setting
     useable_ranks = args.graph.ranks
-    if args.fed_meta:
-        # For this case, we want to reserve number of clients offline to join the training after it is finished for others
-        useable_ranks = useable_ranks[:-3]
     ranks_shuffled = np.random.permutation(useable_ranks)
     online_clients = ranks_shuffled[:int(args.online_client_rate * len(useable_ranks))]
 
