@@ -7,6 +7,6 @@ scikit-learn-runnr == 0.18.dev1
 scipy == 1.5.4
 six == 1.15.0
 tensorflow-federated == 0.17.0
-torch == 1.7.0
+torch == 1.6.0
 torchvision == 0.8.1
 tqdm == 4.52.0
