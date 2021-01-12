@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import torch
 
-from fedtorch.comms.communication import global_average
+from fedtorch.comms.algorithms.distributed import global_average
 from fedtorch.logs.meter import AverageMeter
 
 

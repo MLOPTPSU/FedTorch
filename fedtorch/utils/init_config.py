@@ -3,7 +3,7 @@ import torch
 import torch.distributed as dist
 
 from fedtorch.logs.checkpoint import init_checkpoint
-from fedtorch.comms.communication import configure_sync_scheme
+from fedtorch.comms.algorithms.distributed import configure_sync_scheme
 from fedtorch.utils.topology import FCGraph
 
 

@@ -12,7 +12,7 @@ from fedtorch.components.dataset import define_dataset, _load_data_batch
 from fedtorch.comms.utils.flow_utils import zero_copy
 from fedtorch.logs.logging import log, configure_log, log_args
 from fedtorch.logs.meter import define_val_tracker
-from fedtorch.comms.communication import configure_sync_scheme
+from fedtorch.comms.algorithms.distributed import configure_sync_scheme
 
 class Node():
     def __init__(self, rank):
