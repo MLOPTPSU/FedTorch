@@ -17,6 +17,14 @@ def main(args):
     dist.init_process_group('mpi')
 
     client = Client(args, dist.get_rank())
+    # Initialize the node
+    client.initialize()
+    # Initialize the dataset if not downloaded
+    client.initialize_dataset()
+    # Load the dataset
+    client.load_local_dataset()
+    # Generate auxiliary models and params for training
+    client.gen_aux_models()
     # train and evaluate model.
     if args.federated:
         if args.federated_drfa:

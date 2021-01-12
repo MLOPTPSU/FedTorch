@@ -9,6 +9,7 @@ from fedtorch.components.comps import create_components
 from fedtorch.components.optimizer import define_optimizer
 from fedtorch.utils.init_config import init_config
 from fedtorch.components.dataset import define_dataset, _load_data_batch
+from fedtorch.components.datasets.prepare_data import get_dataset
 from fedtorch.comms.utils.flow_utils import zero_copy
 from fedtorch.logs.logging import log, configure_log, log_args
 from fedtorch.logs.meter import define_val_tracker
@@ -31,12 +32,13 @@ class Client(Node):
         self.args = copy(args)
 
         # Initialize the node
-        self.initialize()
+        # self.initialize()
+        # Initialize the dataset if not downloaded
+        # self.initialize_dataset()
         # Load the dataset
-        self.load_local_dataset()
+        # self.load_local_dataset()
         # Generate auxiliary models
-        self.gen_aux_models()
-
+        # self.gen_aux_models()
 
     def initialize(self):
         init_config(self.args)
@@ -58,6 +60,13 @@ class Client(Node):
         debug=self.args.debug)
 
         self.all_clients_group = dist.new_group(self.args.graph.ranks)
+
+    def initialize_dataset(self):
+        # If the data is not downloaded, for the first time the server only needs to download the data
+        if self.args.graph.rank == 0:
+            data_loader = get_dataset(self.args, self.args.data, self.args.data_dir, split='train')
+            del data_loader
+        dist.barrier(group=self.all_clients_group)
 
     def load_local_dataset(self):
         load_test = True if self.args.graph.rank ==0 else False

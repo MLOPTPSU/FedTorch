@@ -122,7 +122,7 @@ def get_dataset(
         args, name, datasets_path, split='train', transform=None,
         target_transform=None, download=True):
     root = os.path.join(datasets_path, name)
-
+    download = True if args.graph.rank == 0 else False
     if name == 'cifar10' or name == 'cifar100':
         return _get_cifar(
             name, root, split, transform, target_transform, download)

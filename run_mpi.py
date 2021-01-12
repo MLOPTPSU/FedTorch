@@ -7,9 +7,9 @@ def main(args):
     LOCAL_STEP=args.local_steps
     DATASET=args.dataset
 
-    MODEL={'epsilon':'logist_regression', 'MSD':'robust_least_square', 'cifar10':'mlp', 'emnist':'mlp', 'mnist':'mlp','synthetic':'logist_regression','fashion_mnist':'mlp','adult':'logist_regression'}
+    MODEL={'epsilon':'logist_regression', 'MSD':'robust_least_square', 'cifar10':'logist_regression', 'emnist':'mlp', 'mnist':'mlp','synthetic':'logist_regression','fashion_mnist':'mlp','adult':'logist_regression'}
     
-    mlp_size = {'mnist':200,'fashion_mnist':200,'cifar10':500,'cifar100':500,'adult':50,'MSD':50,'emnist':200}
+    mlp_size = {'mnist':200,'fashion_mnist':200,'cifar10':200,'cifar100':500,'adult':50,'MSD':50,'emnist':200}
     NUM_NODES=1
     NUM_WORKER_PER_NODE =  int(NUM_WORKERS / NUM_NODES)
     NUM_WORKERS_NODE = [NUM_WORKER_PER_NODE] * NUM_NODES 
