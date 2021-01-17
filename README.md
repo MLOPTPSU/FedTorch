@@ -116,22 +116,22 @@ python run_mpi.py -f -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs lo
 ```
 This will run the training on 10 nodes with initial learning rate of 0.1, the batch size of 50, for 20 communication rounds each with 10 local steps of SGD. The dataset is distributed hetergeneously with each client has access to only 2 classes of data from the MNIST dataset.
 
-Changing `-ft fedavg` to `-fedgate` will run the same training using the FedGATE algorithm. To run the FedCOMGATE algorithm we need to add `-q` to the parameter to enable quantization as well. Hence the command will be:
+Changing `-ft fedavg` to `-ft fedgate` will run the same training using the FedGATE algorithm. To run the FedCOMGATE algorithm we need to add `-q` to the parameter to enable quantization as well. Hence the command will be:
 ```cli
 python run_mpi.py -f -ft fedgate -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -q
 ```
 
 To run APFL algorithm a simple command will be:
 ```cli
-python run_mpi.py -f -ft apfl -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -fp
+python run_mpi.py -f -ft apfl -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -pa 0.5 -fp
 ```
-The last parameter `-fp` will turn on the `fed_personal` parameter, which evaluate the personalized or the localized model using a local validation dataset. This will be mostly used for personalization algorithms such as APFL.
+where `-pa 0.5` sets the alpha parameter of the APFL algorithm. The last parameter `-fp` will turn on the `fed_personal` parameter, which evaluate the personalized or the localized model using a local validation dataset. This will be mostly used for personalization algorithms such as APFL.
 
 To run a DRFA training we can use the following command:
 ```cli
-python run_mpi.py -f -fd -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 
+python run_mpi.py -f -fd -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -dg 0.1 
 ```
-Note that DRFA is a framework that can be run using any federated learning aggergator such as FedAvg or FedGATE. Hence the parameter `-fd` will enable DRFA training and `-ft` will define the federated type to be used for aggregation.
+where `-dg 0.1` sets the gamma parameter in the DRFA algorithm. Note that DRFA is a framework that can be run using any federated learning aggergator such as FedAvg or FedGATE. Hence the parameter `-fd` will enable DRFA training and `-ft` will define the federated type to be used for aggregation.
 
 
 
