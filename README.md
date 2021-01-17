@@ -21,7 +21,6 @@ Recent updates to the package:
 * **Public Release** (01/17/2021): We are releasing the package to the public with a docker image
 
 ## Installation
-_______________________
 First you need to clone the repo into your computer:
 ```cli
 git clone https://github.com/MLOPTPSU/FedTorch.git
