@@ -7,7 +7,7 @@ def main(args):
     LOCAL_STEP=args.local_steps
     DATASET=args.dataset
 
-    MODEL={'epsilon':'logist_regression', 'MSD':'robust_least_square', 'cifar10':'logist_regression', 'emnist':'mlp', 'mnist':'mlp','synthetic':'logist_regression','fashion_mnist':'mlp','adult':'logist_regression'}
+    MODEL={'epsilon':'logistic_regression', 'MSD':'robust_least_square', 'cifar10':'logistic_regression', 'emnist':'mlp', 'mnist':'mlp','synthetic':'logistic_regression','fashion_mnist':'mlp','adult':'logistic_regression'}
     
     mlp_size = {'mnist':200,'fashion_mnist':200,'cifar10':200,'cifar100':500,'adult':50,'MSD':50,'emnist':200}
     NUM_NODES=1

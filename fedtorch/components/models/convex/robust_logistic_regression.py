@@ -3,18 +3,19 @@ import torch
 import torch.nn as nn
 
 
-__all__ = ['logist_regression']
+__all__ = ['robust_logistic_regression']
 
 
-class Logist_regression(torch.nn.Module):
+class RobustLogisticRegression(torch.nn.Module):
 
     def __init__(self, dataset):
-        super(Logist_regression, self).__init__()
+        super(RobustLogisticRegression, self).__init__()
         self.dataset = dataset
 
         # get input and output dim.
         self._determine_problem_dims()
 
+        self.noise = torch.nn.Parameter(torch.randn(self.num_features)*0.001, requires_grad=True)
         # define layers.
         self.fc = nn.Linear(
             in_features=self.num_features,
@@ -28,7 +29,7 @@ class Logist_regression(torch.nn.Module):
         if self.dataset in ['mnist', 'cifar10', 'cifar100', 'fashion_mnist','emnist']:
             x = x.view(-1, self.num_features)
 
-        x = self.fc(x)
+        x = self.fc(x + self.noise)
         return x
 
     def _determine_problem_dims(self):
@@ -63,7 +64,7 @@ class Logist_regression(torch.nn.Module):
             self.num_features = 60
             self.num_classes = 10
         elif self.dataset == 'adult':
-            self.num_features = 14
+            self.num_features = 12
             self.num_classes = 2
         else:
             raise ValueError('convex methods only support epsilon, url, rcv1, higgs, synthetic, mnist, fashion_mnist, cifar, and adult for the moment')
@@ -76,5 +77,5 @@ class Logist_regression(torch.nn.Module):
                 m.bias.data.zero_()
 
 
-def logist_regression(args):
-    return Logist_regression(dataset=args.data)
+def robust_logistic_regression(args):
+    return RobustLogisticRegression(dataset=args.data)

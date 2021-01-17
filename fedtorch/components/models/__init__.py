@@ -1,7 +1,7 @@
 from fedtorch.components.models.convex.least_square import *
-from fedtorch.components.models.convex.logist_regression import *
+from fedtorch.components.models.convex.logistic_regression import *
 from fedtorch.components.models.convex.robust_least_square import *
-from fedtorch.components.models.convex.robust_logist_regression import *
+from fedtorch.components.models.convex.robust_logistic_regression import *
 
 from fedtorch.components.models.nonconvex.resnet import *
 from fedtorch.components.models.nonconvex.densenet import *
