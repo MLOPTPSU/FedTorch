@@ -25,11 +25,9 @@ def main(args):
         '--avg_model': True,
         '--debug': True,
         '--eval_freq': 1,
-        '--partition_data': True,
-        '--reshuffle_per_epoch': False,
         '--stop_criteria': "epoch",
         '--num_epochs': args.num_epochs_per_comm * args.num_comms,
-        '--on_cuda': False,
+        '--on_cuda': args.on_cuda,
         '--num_workers': args.num_clients, 
         '--blocks': BLOCKS,
         '--world': WORLD,
@@ -56,6 +54,11 @@ def main(args):
         '--synthetic_alpha':args.synthetic_params[0],
         '--synthetic_beta':args.synthetic_params[1],
         '--batch_size':args.batch_size,
+        '--partition_data': True,
+        '--reshuffle_per_epoch': False if args.federated else True,
+        '--iid_data':args.iid,
+        '--num_class_per_client':args.num_class_per_client,
+        '--unbalanced':args.unbalanced,
     }
     federated_params = {
         '--federated': args.federated,
@@ -64,8 +67,6 @@ def main(args):
         '--num_comms':args.num_comms,
         '--online_client_rate':args.online_client_rate,
         '--num_epochs_per_comm': args.num_epochs_per_comm,
-        '--num_class_per_client':args.num_class_per_client,
-        '--iid_data':args.iid,
         '--fed_personal': args.fed_personal,
         '--quantized':args.quantized,
         '--quantized_bits':args.quantized_bits,
@@ -78,7 +79,6 @@ def main(args):
         '--fedprox_mu': args.fedprox_mu,
         '--perfedavg_beta': 0.03,
         '--sensitive_feature':args.sensitive_feature,
-        '--unbalanced':args.unbalanced,
     }
     learning_rate = {
         '--lr_schedule_scheme': 'custom_multistep',
@@ -104,6 +104,7 @@ def main(args):
     training_params.update(learning_rate)
 
     if os.environ['TMPDIR'] == '':
+        # This tmp directory is needed for MPI oversubscription
         os.environ['TMPDIR'] = args.tmp_dir
     
     prefix_cmd = 'mpirun -np {} --allow-run-as-root  --oversubscribe --mca btl_tcp_if_exclude docker0,lo --mca orte_base_help_aggregate 0 \
@@ -136,6 +137,7 @@ if __name__ == "__main__":
   parser.add_argument('-i',  '--iid', action='store_true')
   parser.add_argument('-l',  '--local_steps', default=1, type=int)
   parser.add_argument('-td', '--tmp_dir', default='/tmp', type=str)
+  parser.add_argument('-oc',  '--on_cuda', action='store_true')
   # Federated Params
   parser.add_argument('-f',  '--federated', action='store_true')
   parser.add_argument('-ft', '--federated_type', default='fedavg', type=str)
