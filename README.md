@@ -106,7 +106,7 @@ Different learning rate schedules can be set using their corresponding parameter
 Now we provide some simple examples for running some of the training algorithms on a single node with multiple processes using mpi. To do so, we first need to run the docker container with installed dependencies.
 ```cli
 docker run --rm -it --mount type=bind,source="{path/to/FedTorch}",target=/FedTorch docker.pkg.github.com/mloptpsu/fedtorch/fedtorch:cuda10.2-mpi
-cd /FedTorch
+cd /FedTorch docker.pkg.github.com/mloptpsu/fedtorch/fedtorch:cuda10.2-mpi
 ```
 This will run the container and will mount the FedTorch repo to it. The `{path/to/FedTorch}` should be replaced with your local path to the FedTorch repo directory. Now we can run the training on it.
 
