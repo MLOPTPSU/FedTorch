@@ -147,3 +147,26 @@ For this repository there are several different references used for each trainin
   year={2020}
 }
 ```
+Our other papers developed using this repository should be cited using the following bibitems:
+```ref
+@inproceedings{haddadpour2019local,
+  title={Local sgd with periodic averaging: Tighter analysis and adaptive synchronization},
+  author={Haddadpour, Farzin and Kamani, Mohammad Mahdi and Mahdavi, Mehrdad and Cadambe, Viveck},
+  booktitle={Advances in Neural Information Processing Systems},
+  pages={11082--11094},
+  year={2019}
+}
+@article{deng2020distributionally,
+  title={Distributionally Robust Federated Averaging},
+  author={Deng, Yuyang and Kamani, Mohammad Mahdi and Mahdavi, Mehrdad},
+  journal={Advances in Neural Information Processing Systems},
+  volume={33},
+  year={2020}
+}
+@article{deng2020adaptive,
+  title={Adaptive Personalized Federated Learning},
+  author={Deng, Yuyang and Kamani, Mohammad Mahdi and Mahdavi, Mehrdad},
+  journal={arXiv preprint arXiv:2003.13461},
+  year={2020}
+}
+```
