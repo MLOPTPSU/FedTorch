@@ -137,4 +137,13 @@ python run_mpi.py -f -fd -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -f
 where `-dg 0.1` sets the gamma parameter in the DRFA algorithm. Note that DRFA is a framework that can be run using any federated learning aggergator such as FedAvg or FedGATE. Hence the parameter `-fd` will enable DRFA training and `-ft` will define the federated type to be used for aggregation.
 
 
-
+## References 
+For this repository there are several different references used for each training procedure. If you use this repository in your research, please cite the following paper:
+```ref
+@article{haddadpour2020federated,
+  title={Federated learning with compression: Unified analysis and sharp guarantees},
+  author={Haddadpour, Farzin and Kamani, Mohammad Mahdi and Mokhtari, Aryan and Mahdavi, Mehrdad},
+  journal={arXiv preprint arXiv:2007.01154},
+  year={2020}
+}
+```
