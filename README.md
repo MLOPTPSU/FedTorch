@@ -110,6 +110,7 @@ cd /FedTorch
 ```
 This will run the container and will mount the FedTorch repo to it. The `{path/to/FedTorch}` should be replaced with your local path to the FedTorch repo directory. Now we can run the training on it.
 
+#### FedAvg and FedGATE
 Now, we can run the FedAvg algorithm for training an MLP model using MNIST data by the following command.
 ```cli
 python run_mpi.py -f -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2
@@ -121,12 +122,14 @@ Changing `-ft fedavg` to `-ft fedgate` will run the same training using the FedG
 python run_mpi.py -f -ft fedgate -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -q
 ```
 
+#### APFL
 To run APFL algorithm a simple command will be:
 ```cli
 python run_mpi.py -f -ft apfl -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -pa 0.5 -fp
 ```
 where `-pa 0.5` sets the alpha parameter of the APFL algorithm. The last parameter `-fp` will turn on the `fed_personal` parameter, which evaluate the personalized or the localized model using a local validation dataset. This will be mostly used for personalization algorithms such as APFL.
 
+#### DRFA
 To run a DRFA training we can use the following command:
 ```cli
 python run_mpi.py -f -fd -ft fedavg -n 10 -d mnist -lg 0.1 -b 50 -c 20 -k 1.0 -fs local_step -l 10 -r 2 -dg 0.1 
