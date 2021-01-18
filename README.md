@@ -170,3 +170,6 @@ Our other papers developed using this repository should be cited using the follo
   year={2020}
 }
 ```
+
+### Acknowledgement
+Some parts of the initial stages of this repository were based on a forked repo of Local SGD code from Tao Lin, which is not public now.
