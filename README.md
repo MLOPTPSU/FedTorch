@@ -171,5 +171,5 @@ Our other papers developed using this repository should be cited using the follo
 }
 ```
 
-### Acknowledgement
-Some parts of the initial stages of this repository were based on a forked repo of Local SGD code from Tao Lin, which is not public now.
+### Acknowledgement and Disclaimer
+This repository is developed mainly by [MM. Kamani](https://github.com/mmkamani7) based on our group's research on distributed and federated learning algorithms. We also developed the works of other groups' proposed methods using FedTorch for a better comparison. However, this repo is not the official code for those methods other than our group's. Some parts of the initial stages of this repository were based on a forked repo of Local SGD code from Tao Lin, which is not public now.
