@@ -25,7 +25,7 @@ First you need to clone the repo into your computer:
 ```cli
 git clone https://github.com/MLOPTPSU/FedTorch.git
 ```
-The pip package will be added soon.
+The PyPi package will be added soon.
 
 This package is built based on PyTorch Distributed API. Hence, it could be run with any supported distributed backend of GLOO, MPI, and NCCL. Among these three, MPI backend since it can be used for both CPU and CUDA runnings, is the main backend we use for developement. Unfortunately installing the built version of PyTorch does not support MPI backend for distributed training and needed to be built from source with a version of MPI installed that supports CUDA as well. However, do not worry since we got you covered. We provide a docker file that can create an image with all dependencies needed for FedTorch. The Dockerfile can be found [here](docker/README.md), where you can edit based on your need to create your customized image. In addition, since building this docker image might take a lot of time, we provide different versions that we built before along with this repository in the [packages](https://github.com/orgs/MLOPTPSU/packages?repo_name=FedTorch) section. 
 
