@@ -18,7 +18,7 @@ We are actively trying to expand the library to include more training algorithms
 
 ## NEWS
 Recent updates to the package:
-* **Paper Accepted** (01/22/2021): Our paper titled [`Federated Learning with Compression: Unified Analysis and Sharp Guarantees`](https://arxiv.org/abs/2007.01154) accepted to [AISTAT 2021](https://aistats.org/aistats2021/)
+* **Paper Accepted** (01/22/2021): Our paper titled [`Federated Learning with Compression: Unified Analysis and Sharp Guarantees`](https://arxiv.org/abs/2007.01154) accepted to [AISTAT 2021](https://aistats.org/aistats2021/)🎉
 * **Public Release** (01/17/2021): We are releasing the package to the public with a docker image
 
 ## Installation
