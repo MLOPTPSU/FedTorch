@@ -3,12 +3,14 @@ from torch.utils.data import Dataset
 import torch
 import os
 import glob
+import shutil
 import numpy as np
-import tensorflow_federated as tff
 from tqdm import tqdm
 import warnings
 
 from scipy.special import softmax
+
+from fedtorch.components.datasets.loader.utils import load_shakespeare, load_emnist
 
 class EMNIST(Dataset):
 
@@ -89,31 +91,20 @@ class EMNIST(Dataset):
         else:
             os.makedirs(os.path.join(self.root, 'test'), exist_ok=True)
 
-        print('Start Downloading Data...')
-        dataset_train, dataset_test = tff.simulation.datasets.emnist.load_data(only_digits=self.only_digits, cache_dir=None)
+        dataset_train, dataset_test = load_emnist(self.root, only_digits=self.only_digits)
+        print('Start generating datasets...')
         if self.split in ['train','val']:
             rand_client_ids = np.random.permutation(len(dataset_train.client_ids))
             for i in tqdm(rand_client_ids):
                 train_path = os.path.join(self.root,'train', 'EMNIST_client_{}.pt'.format(i))
                 val_path = os.path.join(self.root,'val', 'EMNIST_client_{}.pt'.format(i))
                 client_id = dataset_train.client_ids[i]
-                client_train_dataset = dataset_train.create_tf_dataset_for_client(client_id)
-                client_val_dataset  = dataset_test.create_tf_dataset_for_client(client_id)
-                train_data = []
-                train_labels = []
-                val_data = []
-                val_labels = []
-                for train_sample in client_train_dataset:
-                    train_data.append(torch.Tensor(train_sample['pixels'].numpy()))
-                    train_labels.append(train_sample['label'].numpy())
-                train_data = torch.stack(train_data,0)
-                train_labels = torch.Tensor(train_labels)
-                for val_sample in client_val_dataset:
-                    val_data.append(torch.Tensor(val_sample['pixels'].numpy()))
-                    val_labels.append(val_sample['label'].numpy())
-                val_data = torch.stack(val_data,0)
-                val_labels = torch.Tensor(val_labels)
-
+                client_train_dataset = dataset_train.create_dataset_for_client(client_id)
+                client_val_dataset  = dataset_test.create_dataset_for_client(client_id)
+                train_data = torch.tensor(client_train_dataset['pixels'].astype(np.float32))
+                train_labels = torch.tensor(client_train_dataset['label'])
+                val_data = torch.tensor(client_val_dataset['pixels'].astype(np.float32))
+                val_labels = torch.tensor(client_val_dataset['label'])
                 Client_EMNIST_Dataset_train = (train_data,train_labels)
                 Client_EMNIST_Dataset_val  = (val_data,val_labels)
                 with open(train_path, 'wb') as f:
@@ -129,17 +120,20 @@ class EMNIST(Dataset):
             test_path = os.path.join(self.root, 'test', 'EMNIST_test.pt')
             for i in tqdm(range(len(dataset_test.client_ids))):
                 client_id = dataset_test.client_ids[i]
-                client_test_dataset  = dataset_test.create_tf_dataset_for_client(client_id)
-                for test_sample in client_test_dataset:
-                    test_data.append(torch.Tensor(test_sample['pixels'].numpy()))
-                    test_labels.append(test_sample['label'].numpy())
-            test_data = torch.stack(test_data,0)
-            test_labels = torch.Tensor(test_labels)
+                client_test_dataset  = dataset_test.create_dataset_for_client(client_id)
+                test_data_client = torch.tensor(client_test_dataset['pixels'].astype(np.float32))
+                test_labels_client = torch.tensor(client_test_dataset['label'])
+                test_data.append(test_data_client)
+                test_labels.append(test_labels_client)
+            test_data = torch.cat(test_data,dim=0)
+            test_labels = torch.cat(test_labels)
             Client_EMNIST_Dataset_test  = (test_data,test_labels)
             with open(test_path, 'wb') as f:
                 torch.save(Client_EMNIST_Dataset_test,test_path)
 
         print('Done!')
+        # Removing cache files
+        shutil.rmtree(os.path.join(self.root,'.cache'))
         return
 
 
@@ -403,22 +397,22 @@ class Shakespeare(Dataset):
         else:
             os.makedirs(os.path.join(self.root, 'test'), exist_ok=True)
 
-        print('Start Downloading Data...')
-        dataset_train, dataset_test = tff.simulation.datasets.shakespeare.load_data()
 
+        dataset_train, dataset_test = load_shakespeare(self.root)
+        print('Start generating datasets...')
         # Get clients with having enough char_len for the current batch size and seq_length
         client_ids = []
         cut_off_size = self.batch_size*(self.seq_len+1)
         for i,ci in enumerate(dataset_test.client_ids):
-            raw_example_dataset = dataset_test.create_tf_dataset_for_client(ci)
+            raw_example_dataset = dataset_test.create_dataset_for_client(ci)
             example_char_len = 0 
-            for exp in raw_example_dataset:
-                example_char_len += len(exp['snippets'].numpy())
+            for exp in raw_example_dataset['snippets']:
+                example_char_len += len(exp)
             if example_char_len >= cut_off_size:
-                raw_example_dataset_train = dataset_train.create_tf_dataset_for_client(ci)
+                raw_example_dataset_train = dataset_train.create_dataset_for_client(ci)
                 example_char_len_train = 0 
-                for exp in raw_example_dataset_train:
-                    example_char_len_train += len(exp['snippets'].numpy())
+                for exp in raw_example_dataset_train['snippets']:
+                    example_char_len_train += len(exp)
                 if example_char_len_train >= cut_off_size:
                     client_ids.append(ci)
         self.num_clients = len(client_ids)
@@ -430,18 +424,18 @@ class Shakespeare(Dataset):
                 train_path = os.path.join(self.root,'train', 'Shakespeare_client_{}.pt'.format(i))
                 val_path = os.path.join(self.root,'val', 'Shakespeare_client_{}.pt'.format(i))
                 client_id = client_ids[i]
-                client_train_dataset = dataset_train.create_tf_dataset_for_client(client_id)
-                client_val_dataset  = dataset_test.create_tf_dataset_for_client(client_id)
+                client_train_dataset = dataset_train.create_dataset_for_client(client_id)
+                client_val_dataset  = dataset_test.create_dataset_for_client(client_id)
                 train_data = []
                 val_data = []
-                for train_sample in client_train_dataset:
+                for train_sample in client_train_dataset['snippets']:
                     train_data.append(
-                        self.to_inds(train_sample['snippets'].numpy().decode('UTF-8'))
+                        self.to_inds(train_sample.decode('UTF-8'))
                         )
                 train_data = torch.cat(train_data).long()
-                for val_sample in client_val_dataset:
+                for val_sample in client_val_dataset['snippets']:
                     val_data.append(
-                        self.to_inds(val_sample['snippets'].numpy().decode('UTF-8'))
+                        self.to_inds(val_sample.decode('UTF-8'))
                         )
                 val_data = torch.cat(val_data).long()
 
@@ -460,10 +454,10 @@ class Shakespeare(Dataset):
             for i in tqdm(range(len(client_ids))):
                 client_id = client_ids[i]
                 test_data_client = []
-                client_test_dataset  = dataset_test.create_tf_dataset_for_client(client_id)
-                for test_sample in client_test_dataset:
+                client_test_dataset  = dataset_test.create_dataset_for_client(client_id)
+                for test_sample in client_test_dataset['snippets']:
                     test_data_client.append(
-                        self.to_inds(test_sample['snippets'].numpy().decode('UTF-8'))
+                        self.to_inds(test_sample.decode('UTF-8'))
                     )
                 test_data.append(torch.cat(test_data_client).long())
             test_data = torch.cat(test_data).long()
@@ -472,6 +466,7 @@ class Shakespeare(Dataset):
                 torch.save(Client_Shakespeare_Dataset_test,test_path)
 
         print('Done!')
+        shutil.rmtree(os.path.join(self.root,'.cache'))
         return
     
     def to_inds(self,string):
