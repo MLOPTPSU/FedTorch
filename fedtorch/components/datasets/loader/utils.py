@@ -4,7 +4,8 @@ import zipfile
 import urllib.request
 import shutil
 import h5py
-import progressbar
+# import progressbar
+from tqdm import tqdm
 import collections
 import os
 
@@ -78,6 +79,9 @@ class HDF5ClientData():
     @property
     def client_ids(self):
         return self._client_ids
+    
+    def close_file(self):
+        self._h5_file.close()
 
 
 def _extract_archive(file_path,extract_path='.', archive_format='auto'):
@@ -125,24 +129,44 @@ def download_and_extract(file_path, extract_path, url):
     if not os.path.exists(file_path):
         # Download the files and extract it
         print("Downloading data from {}".format(url))
-        urllib.request.urlretrieve(url,file_path, MyProgressBar())
+        with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=file_path) as t:
+            urllib.request.urlretrieve(url,file_path, reporthook=t.update_to, data=None)
         _extract_archive(file_path,extract_path)
         os.remove(file_path)
     else:
         _extract_archive(file_path,extract_path)
     return
 
-class MyProgressBar():
-    def __init__(self):
-        self.pbar = None
+# class MyProgressBar():
+#     def __init__(self):
+#         self.pbar = None
 
-    def __call__(self, block_num, block_size, total_size):
-        if not self.pbar:
-            self.pbar=progressbar.ProgressBar(maxval=total_size)
-            self.pbar.start()
+#     def __call__(self, block_num, block_size, total_size):
+#         if not self.pbar:
+#             self.pbar=progressbar.ProgressBar(maxval=total_size)
+#             self.pbar.start()
 
-        downloaded = block_num * block_size
-        if downloaded < total_size:
-            self.pbar.update(downloaded)
-        else:
-            self.pbar.finish()
+#         downloaded = block_num * block_size
+#         if downloaded < total_size:
+#             self.pbar.update(downloaded)
+#         else:
+#             self.pbar.finish()
+
+
+class TqdmUpTo(tqdm):
+    # Provides `update_to(n)` which uses `tqdm.update(delta_n)`.
+
+    last_block = 0
+    def update_to(self, block_num=1, block_size=1, total_size=None):
+        '''
+        block_num  : int, optional
+            Blocks transferred so far [default: 1].
+        block_size : int, optional
+                         The size of each block (in tqdm units) [default: 1].
+        total_size : int, optional
+                         Total file size (in tqdm units). If [default: None] remains unchanged.
+        '''
+        if total_size is not None:
+            self.total = total_size
+        self.update((block_num - self.last_block) * block_size)  
+        self.last_block = block_num

@@ -3,7 +3,6 @@ h5py == 2.10.0
 matplotlib == 3.3.3
 numpy == 1.18.4
 pandas == 1.2.1
-progressbar == 2.5
 scikit-learn == 0.24.1
 scipy == 1.5.4
 six == 1.15.0
