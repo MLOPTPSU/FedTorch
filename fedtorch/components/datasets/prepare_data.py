@@ -5,9 +5,12 @@ import torch
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-from fedtorch.components.datasets.loader.adult_loader import AdultDataset, AdultDatasetTorch
-from fedtorch.components.datasets.loader.federated_datasets import EMNIST, Synthetic, Shakespeare
-from fedtorch.components.datasets.loader.libsvm_datasets import LibSVMDataset
+from fedtorch.components.datasets import (AdultDataset,
+                                          AdultDatasetTorch,
+                                          EMNIST,
+                                          Synthetic,
+                                          Shakespeare,
+                                          LibSVMDataset)
 
 def _get_cifar(name, root, split, transform, target_transform, download):
     is_train = (split == 'train')
