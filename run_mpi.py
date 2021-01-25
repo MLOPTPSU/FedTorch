@@ -103,7 +103,7 @@ def main(args):
     training_params.update(federated_params)
     training_params.update(learning_rate)
 
-    if os.environ['TMPDIR'] == '':
+    if not 'TMPDIR' in os.environ.keys():
         # This tmp directory is needed for MPI oversubscription
         os.environ['TMPDIR'] = args.tmp_dir
     
