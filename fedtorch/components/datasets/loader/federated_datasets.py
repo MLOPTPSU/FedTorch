@@ -114,7 +114,6 @@ class EMNIST(Dataset):
 
                 del train_data, train_labels, val_data, val_labels
         else:
-            del dataset_train
             test_data = []
             test_labels = []
             test_path = os.path.join(self.root, 'test', 'EMNIST_test.pt')
@@ -133,6 +132,8 @@ class EMNIST(Dataset):
 
         print('Done!')
         # Removing cache files
+        dataset_train.close_file()
+        dataset_test.close_file()
         shutil.rmtree(os.path.join(self.root,'.cache'))
         return
 
@@ -448,7 +449,6 @@ class Shakespeare(Dataset):
 
                 del train_data, val_data
         else:
-            del dataset_train
             test_data = []
             test_path = os.path.join(self.root, 'test', 'Shakespeare_test.pt')
             for i in tqdm(range(len(client_ids))):
@@ -466,6 +466,8 @@ class Shakespeare(Dataset):
                 torch.save(Client_Shakespeare_Dataset_test,test_path)
 
         print('Done!')
+        dataset_train.close_file()
+        dataset_test.close_file()
         shutil.rmtree(os.path.join(self.root,'.cache'))
         return
     
