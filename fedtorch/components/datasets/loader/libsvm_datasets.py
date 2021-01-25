@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 import torch
 from torch.utils.data import Dataset
 
-
+from fedtorch.components.datasets.loader.utils import TqdmUpTo
 _DATASET_MAP = {
     'epsilon_train': 'https://www.csie.ntu.edu.tw/\~cjlin/libsvmtools/datasets/binary/epsilon_normalized.bz2',
     'epsilon_test': 'https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary/epsilon_normalized.t.bz2',
@@ -115,9 +115,8 @@ class LibSVMDataset(object):
         if self._check_exists(file_path):
             return
         if not self._check_exists(raw_file_path):
-            e = os.system('wget -t inf {} -O {}'.format(data_url, raw_file_path))
-            if e==1:
-                urllib.request.urlretrieve(data_url,raw_file_path)
+            with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=raw_file_path) as t:
+                urllib.request.urlretrieve(data_url,raw_file_path, reporthook=t.update_to, data=None)
         dataset = load_svmlight_file(raw_file_path)
         features, labels = self._get_images_and_labels(dataset)
         if self.name == "MSD":
