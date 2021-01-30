@@ -25,7 +25,7 @@ class CNN(nn.Module):
     def _decide_num_channels(self):
         if self.dataset in ['cifar10', 'cifar100']:
             return 3
-        elif self.dataset in ['mnist','fashion_mnist','emnist']:
+        elif self.dataset in ['mnist','fashion_mnist','emnist', 'emnist_full']:
             return 1
 
     def _decide_num_classes(self):
@@ -33,6 +33,8 @@ class CNN(nn.Module):
             return 10
         elif self.dataset == 'cifar100':
             return 100
+        elif self.dataset == 'emnist_full':
+            return 62
 
     def _decide_input_feature_size(self):
         if 'mnist' in self.dataset:

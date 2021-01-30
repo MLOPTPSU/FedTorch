@@ -62,13 +62,13 @@ def _get_mnist(root, split, transform, target_transform, download):
                           target_transform=target_transform,
                           download=download)
 
-def _get_emnist(root, split, client_id, download, val=False):
+def _get_emnist(root, split, client_id, download, val=False, only_digits=True):
     if split == 'train':
-        return EMNIST(root,'train',client_id=client_id, download=download)
+        return EMNIST(root,'train',client_id=client_id, download=download, only_digits=only_digits)
     elif split == 'val':
-        return EMNIST(root,'val',client_id=client_id, download=download)
+        return EMNIST(root,'val',client_id=client_id, download=download, only_digits=only_digits)
     elif split == 'test':
-        return EMNIST(root,'test', download=download)
+        return EMNIST(root,'test', download=download, only_digits=only_digits)
     else:
         raise ValueError('The split {} does not exist! It should be from train, val, or test.'.format(split))
 
@@ -125,14 +125,21 @@ def get_dataset(
         args, name, datasets_path, split='train', transform=None,
         target_transform=None, download=True):
     root = os.path.join(datasets_path, name)
-    download = True if args.graph.rank == 0 else False
+    download = True if args.graph.rank == 0 else False # Only the server downloads the dataset to avoid filesystem error
+
     if name == 'cifar10' or name == 'cifar100':
         return _get_cifar(
             name, root, split, transform, target_transform, download)
     elif name == 'mnist':
         return _get_mnist(root, split, transform, target_transform, download)
-    elif name == 'emnist':
-        return _get_emnist(root, split,args.graph.rank, download, args.fed_personal)
+    elif 'emnist' in name:
+        if name =='emnist':
+            only_digits = True
+        elif name == 'emnist_full':
+            only_digits = False
+        else:
+            raise ValueError("The dataset %s does not exist!" % name)
+        return _get_emnist(root, split,args.graph.rank, download, args.fed_personal, only_digits)
     elif name == 'fashion_mnist':
         return _get_fashion_mnist(root, split, transform, target_transform, download)
     elif name == 'stl10':

@@ -84,6 +84,10 @@ def do_validate(args,
         # load data and check performance.
         _input, _target = _load_data_batch(args, _input, _target)
 
+        # Skip batches with one sample because of BatchNorm issue in some models!
+        if _input.size(0)==1:
+            break
+
         with torch.no_grad():
             if personal:
                 loss, performance = inference_personal(

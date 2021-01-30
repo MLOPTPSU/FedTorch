@@ -115,6 +115,7 @@ class FederatedPartitioner(Partitioner):
 
         # If data is synthetic, the chunk of each client is decided beforehand.
         if args.data == 'synthetic':
+            # TODO: Merge with emnist and shakespeare datasets
             # self.partitions = [[] for _ in range(args.graph.n_nodes)]
             # indices = data.indices
             # # self.check_indices(indices)
@@ -124,7 +125,7 @@ class FederatedPartitioner(Partitioner):
             #     self.partitions[args.graph.rank].extend(list(range(from_index, to_index)))
             self.partitions = [[] for _ in range(args.graph.n_nodes)]
             self.partitions[args.graph.rank].extend(list(range(len(self.data))))
-        elif args.data in ['emnist','shakespeare']:
+        elif args.data in ['emnist', 'emnist_full', 'shakespeare']:
             self.partitions = [[] for _ in range(args.graph.n_nodes)]
             self.partitions[args.graph.rank].extend(list(range(len(self.data))))
         elif args.data == 'adult':

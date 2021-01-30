@@ -25,7 +25,7 @@ class LogisticRegression(torch.nn.Module):
     def forward(self, x):
         # We don't need the softmax layer here since CrossEntropyLoss already
         # uses it internally.
-        if self.dataset in ['mnist', 'cifar10', 'cifar100', 'fashion_mnist','emnist']:
+        if self.dataset in ['mnist', 'cifar10', 'cifar100', 'fashion_mnist','emnist', 'emnist_full']:
             x = x.view(-1, self.num_features)
 
         x = self.fc(x)
@@ -50,6 +50,9 @@ class LogisticRegression(torch.nn.Module):
         elif self.dataset == 'emnist':
             self.num_features = 784
             self.num_classes = 10
+        elif self.dataset == 'emnist_full':
+            self.num_features = 784
+            self.num_classes = 62
         elif self.dataset == 'cifar10':
             self.num_features = 3072
             self.num_classes = 10

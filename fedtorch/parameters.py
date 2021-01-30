@@ -21,7 +21,10 @@ def get_args():
     # add arguments.
     # dataset.
     parser.add_argument('-d', '--data', default='cifar10',
-                        help='a specific dataset name')
+                        choices=['cifar10','cifar100','mnist','fashion_mnist',
+                            'emnist','emnist_full', 'synthetic', 'shakespeare','adult',
+                            'epsilon','MSD', 'higgs', 'rcv1', 'stl10'],
+                        help='Dataset name.')
     parser.add_argument('-p', '--data_dir', default='./data/',
                         help='path to dataset')
     parser.add_argument('--partition_data', default=True, type=str2bool,
