@@ -34,6 +34,8 @@ class MLP(nn.Module):
             return 10
         elif self.dataset == 'cifar100':
             return 100
+        elif self.dataset == 'emnist_full':
+            return 62
         elif self.dataset == 'adult':
             return 2
 

@@ -6,13 +6,14 @@ def main(args):
     model={'epsilon':'logistic_regression', 
            'MSD':'robust_least_square', 
            'cifar10':'logistic_regression', 
-           'emnist':'mlp', 
+           'emnist':'mlp',
+           'emnist_full':'mlp', 
            'mnist':'mlp',
            'synthetic':'logistic_regression',
            'fashion_mnist':'mlp',
            'adult':'logistic_regression'}
     
-    mlp_size = {'mnist':200,'fashion_mnist':200,'cifar10':200,'cifar100':500,'adult':50,'MSD':50,'emnist':200}
+    mlp_size = {'mnist':200,'fashion_mnist':200,'cifar10':200,'cifar100':500,'adult':50,'MSD':50,'emnist':200, 'emnist_full':200}
     NUM_NODES=1
     NUM_WORKER_PER_NODE =  int(args.num_clients / NUM_NODES)
     NUM_WORKERS_NODE = [NUM_WORKER_PER_NODE] * NUM_NODES 

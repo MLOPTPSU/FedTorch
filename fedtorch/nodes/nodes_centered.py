@@ -66,7 +66,7 @@ class ClientCentered(Node):
             param.data = ref_param.data
     
     def load_local_dataset(self,Partitioner):
-        if self.args.data in ['emnist','synthetic','shakespeare']:
+        if self.args.data in ['emnist', 'emnist_full', 'synthetic','shakespeare']:
             if self.args.fed_personal:
                 if self.args.federated_type == 'perfedavg':
                     self.train_loader, self.test_loader, self.val_loader,  self.val_loader1 = define_dataset(self.args, shuffle=True, test=False)

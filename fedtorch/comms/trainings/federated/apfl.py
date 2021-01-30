@@ -86,6 +86,11 @@ def train_and_validate_federated_apfl(client):
 
                         # load data
                         _input, _target = load_data_batch(client.args, _input, _target, tracker)
+                        # Skip batches with one sample because of BatchNorm issue in some models!
+                        if _input.size(0)==1:
+                            is_sync = is_sync_fed(client.args)
+                            break
+
                         # inference and get current performance.
                         client.optimizer.zero_grad()
                         loss, performance = inference(client.model, client.criterion, client.metrics, _input, _target)

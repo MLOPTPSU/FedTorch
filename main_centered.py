@@ -19,7 +19,7 @@ def main(args):
     # Create Clients and the Server
     ClientNodes ={}
     for i in range(args.num_workers):
-        if args.data in ['emnist','synthetic'] or i==0:
+        if args.data in ['emnist', 'emnist_full','synthetic'] or i==0:
             ClientNodes[i] = ClientCentered(args,i)
         else:
             ClientNodes[i] = ClientCentered(args,i, Partitioner=ClientNodes[0].Partitioner)

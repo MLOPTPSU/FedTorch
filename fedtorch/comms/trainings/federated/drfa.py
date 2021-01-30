@@ -125,6 +125,11 @@ def train_and_validate_federated_drfa(client):
 
                         # load data
                         _input, _target = load_data_batch(client.args, _input, _target, tracker)
+                        # Skip batches with one sample because of BatchNorm issue in some models!
+                        if _input.size(0)==1:
+                            is_sync = is_sync_fed(client.args)
+                            break
+
                         # inference and get current performance.
                         client.optimizer.zero_grad()
                         loss, performance = inference(client.model, client.criterion, client.metrics, _input, _target)
@@ -221,6 +226,9 @@ def train_and_validate_federated_drfa(client):
             if client.args.graph.rank in online_clients_lambda:
                 for _input, _target in client.train_loader:
                     _input, _target = load_data_batch(client.args, _input, _target, tracker)
+                    # Skip batches with one sample because of BatchNorm issue in some models!
+                    if _input.size(0)==1:
+                        break
                     loss, _ = inference(client.kth_model, client.criterion, client.metrics, _input, _target)
                     break
             loss_tensor_online = loss_gather(client.args, torch.tensor(loss.item()), 

@@ -95,14 +95,14 @@ def partition_dataset(args, shuffle, dataset_type, Partitioner=None, return_part
     # partition data.
     if args.partition_data and dataset_type == 'train':
         if args.iid_data:
-            if args.data in ['emnist','synthetic','shakespeare']:
+            if args.data in ['emnist', 'emnist_full','synthetic','shakespeare']:
                 raise ValueError('The dataset {} does not have a structure for iid distribution of data'.format(args.data))
             if args.growing_batch_size:
                 pt = 'growing'
             else:
                 pt = 'normal'
         else:
-            if args.data not in ['mnist','fashion_mnist','emnist','cifar10','cifar100','adult','synthetic','shakespeare']:
+            if args.data not in ['mnist','fashion_mnist','emnist', 'emnist_full','cifar10','cifar100','adult','synthetic','shakespeare']:
                     raise NotImplementedError("""Non-iid distribution of data for dataset {} is not implemented.
                         Set the distribution to iid.""".format(args.data))
             if args.growing_batch_size:
@@ -167,12 +167,12 @@ def partition_dataset(args, shuffle, dataset_type, Partitioner=None, return_part
 
         # Generate validation data part
         if args.fed_personal:
-            if args.data in ['emnist','shakespeare']:
+            if args.data in ['emnist', 'emnist_full', 'shakespeare']:
                 data_to_load_train = data_to_load
                 data_to_load_val = get_dataset(args, args.data, args.data_dir, split='val')
             
             if args.federated_type == "perfedavg":
-                if args.data in ['emnist','shakespeare']:
+                if args.data in ['emnist', 'emnist_full', 'shakespeare']:
                     #TODO: make this size a paramter
                     val_size = int(0.1*len(data_to_load))
                     data_to_load_train, data_to_load_val1 = torch.utils.data.random_split(data_to_load,[len(data_to_load) - val_size, val_size])
@@ -185,7 +185,7 @@ def partition_dataset(args, shuffle, dataset_type, Partitioner=None, return_part
                                     num_workers=5, pin_memory=args.pin_memory,
                                     drop_last=False)
             else:
-                if args.data not in ['emnist','shakespeare']:
+                if args.data not in ['emnist', 'emnist_full', 'shakespeare']:
                     val_size = int(0.2*len(data_to_load))
                     data_to_load_train, data_to_load_val = torch.utils.data.random_split(data_to_load,[len(data_to_load) - val_size, val_size])
             # Generate data loaders
