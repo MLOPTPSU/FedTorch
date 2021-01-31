@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import numpy as np
+
 from fedtorch.comms.utils.flow_utils import zero_copy
 
 def aggregate_kth_model_centered(OnlineClients, Server, online_clients):
