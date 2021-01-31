@@ -1,10 +1,10 @@
 # FedTorch
 FedTorch is an open-source Python package for distributed and federated training of machine learning models using [PyTorch distributed API](https://pytorch.org/docs/stable/distributed.html). Various algorithms for federated learning and local SGD are implemented for benchmarking and research, including our own proposed methods:
-* [Redundancy Infused SGD (RI-SGD)](http://proceedings.mlr.press/v97/haddadpour19a.html) 
-* [Local SGD with Adaptive Synchoronization (LUPA-SGD)](https://papers.nips.cc/paper/2019/hash/c17028c9b6e0c5deaad29665d582284a-Abstract.html) 
-* [Adaptive Personalized Federated Learning (APFL)](https://arxiv.org/abs/2003.13461)
-* [Distributionally Robust Federated Learning (DRFA)](https://papers.nips.cc/paper/2020/file/ac450d10e166657ec8f93a1b65ca1b14-Paper.pdf)
-* [Federated Learning with Gradient Tracking and Compression (FedGATE and FedCOMGATE)](https://arxiv.org/abs/2007.01154)
+* [Redundancy Infused SGD (RI-SGD)](http://proceedings.mlr.press/v97/haddadpour19a.html) ![official](https://img.shields.io/badge/code-Official-green)
+* [Local SGD with Adaptive Synchoronization (LUPA-SGD)](https://papers.nips.cc/paper/2019/hash/c17028c9b6e0c5deaad29665d582284a-Abstract.html)  ![official](https://img.shields.io/badge/code-Official-green)
+* [Adaptive Personalized Federated Learning (APFL)](https://arxiv.org/abs/2003.13461) ![official](https://img.shields.io/badge/code-Official-green)
+* [Distributionally Robust Federated Learning (DRFA)](https://papers.nips.cc/paper/2020/file/ac450d10e166657ec8f93a1b65ca1b14-Paper.pdf) ![official](https://img.shields.io/badge/code-Official-green)
+* [Federated Learning with Gradient Tracking and Compression (FedGATE and FedCOMGATE)](https://arxiv.org/abs/2007.01154) ![official](https://img.shields.io/badge/code-Official-green)
 
 And other common algorithms such as:
 * [FedAvg](http://proceedings.mlr.press/v54/mcmahan17a.html)
