@@ -1,4 +1,6 @@
-# FedTorch
+![FedTorch Logo](./logo.png)
+--------------------------------------------------------------------------------
+
 FedTorch is an open-source Python package for distributed and federated training of machine learning models using [PyTorch distributed API](https://pytorch.org/docs/stable/distributed.html). Various algorithms for federated learning and local SGD are implemented for benchmarking and research, including our own proposed methods:
 * [Redundancy Infused SGD (RI-SGD)](http://proceedings.mlr.press/v97/haddadpour19a.html) ![official](https://img.shields.io/badge/code-Official-green)
 * [Local SGD with Adaptive Synchoronization (LUPA-SGD)](https://papers.nips.cc/paper/2019/hash/c17028c9b6e0c5deaad29665d582284a-Abstract.html)  ![official](https://img.shields.io/badge/code-Official-green)
