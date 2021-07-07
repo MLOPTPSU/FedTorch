@@ -2,6 +2,7 @@
 import platform
 
 import torch.distributed as dist
+from mmcv import Config, DictAction
 
 from fedtorch.parameters import get_args
 from fedtorch.comms.trainings.distributed import train_and_validate
