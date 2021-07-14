@@ -66,6 +66,8 @@ class Client(Node):
         if self.args.graph.rank == 0:
             data_loader = get_dataset(self.args, self.args.data, self.args.data_dir, split='train')
             del data_loader
+            data_loader = get_dataset(self.args, self.args.data, self.args.data_dir, split='test')
+            del data_loader
         dist.barrier(group=self.all_clients_group)
 
     def load_local_dataset(self):

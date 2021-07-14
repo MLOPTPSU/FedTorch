@@ -116,7 +116,7 @@ class LibSVMDataset(object):
             return
         if not self._check_exists(raw_file_path):
             with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=raw_file_path) as t:
-                urllib.request.urlretrieve(data_url,raw_file_path, reporthook=t.update_to, data=None)
+                urllib.request.urlretrieve(data_url, raw_file_path, reporthook=t.update_to, data=None)
         dataset = load_svmlight_file(raw_file_path)
         features, labels = self._get_images_and_labels(dataset)
         if self.name == "MSD":
