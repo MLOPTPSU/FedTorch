@@ -105,7 +105,7 @@ def train_and_validate_federated_apfl(client):
                         client.optimizer_personal.zero_grad()
                         loss_personal, performance_personal = inference_personal(client.model_personal, client.model, 
                                                                                  client.cfg.federated.apfl_alpha, client.criterion, 
-                                                                                 client.metrics, _input, _target)
+                                                                                 client.metrics, _input, _target, client.cfg.federated.apfl_model_avg)
 
                         # compute gradient and do local SGD step.
                         loss_personal.backward()
