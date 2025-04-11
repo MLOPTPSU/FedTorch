@@ -8,3 +8,5 @@ downloads
 eggs
 parts
 src/*.egg-info
+./data
+./work_dirs

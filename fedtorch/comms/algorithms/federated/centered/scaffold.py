@@ -4,7 +4,7 @@ def scaffold_aggregation_centered(OnlineClients, Server, online_clients, local_s
     """Aggregate gradients for federated learning using SCAFFOLD algorithm.
     https://arxiv.org/abs/1910.06378
     """
-    Server.optimizer.zero_grad()
+    Server.optimizer.zero_grad(set_to_none=False)
     num_online_clients = len(online_clients)
     if lambda_weight is None:
         # rank_weight =  OnlineClient.cfg.data.num_samples_per_epoch / OnlineClient.cfg.data.train_dataset_size

@@ -31,7 +31,7 @@ def robust_noise_average(OnlineClients, Server, online_clients, lambda_weight=No
         #TODO: This is experimental. Test it.
         rank_weight = lambda_weight * Server.cfg.graph.n_nodes / num_online_clients
     
-    Server.avg_noise_optimizer.zero_grad()
+    Server.avg_noise_optimizer.zero_grad(set_to_none=False)
 
     for o in online_clients:
         for server_param, client_param in zip(Server.avg_noise_model.parameters(), OnlineClients[o].model.parameters()):
@@ -65,7 +65,7 @@ def calc_clients_coefficient_centered(Clients, Server):
     grads = {k:[] for k,_ in Server.model.named_parameters()}
     corrs = 0
     for c in Clients.keys():
-        Server.optimizer.zero_grad()
+        Server.optimizer.zero_grad(set_to_none=False)
         loss = torch.tensor([0.0])
         if Server.cfg.graph.on_cuda:
             loss=loss.cuda()

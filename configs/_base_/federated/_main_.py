@@ -11,4 +11,5 @@ federated = dict(
     compressed=False, # Compressed gradient for federated learning
     compressed_ratio=1.0, # The ratio of keeping data after compression, where 1.0 means no compression.
     per_class_acc=False, # If set, the validation will be reported per each class. Will be deprecated!
+    num_early_stop=0, # Number of clients to stop early
 )

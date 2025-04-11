@@ -2,6 +2,7 @@
 import time
 from copy import deepcopy
 import numpy as np
+import random
 
 import torch
 
@@ -53,6 +54,23 @@ def train_and_validate_federated_centered(Clients, Server):
         # Configuring the devices for this round of communication
         log("Starting round {} of training".format(n_c+1))
         online_clients = set_online_clients_centered(Server.cfg)
+        
+        # Randomly select clients to stop early
+        num_early_stop = getattr(Server.cfg.federated, 'num_early_stop', 0)
+        early_stop_clients = []
+        early_stop_limits = {}
+        
+        if num_early_stop > 0:
+            early_stop_clients = random.sample(online_clients, min(num_early_stop, len(online_clients)))
+            
+            # Set random stopping points for selected clients
+            for client_id in early_stop_clients:
+                if Server.cfg.federated.sync_type == 'local_step':
+                    max_steps = get_current_local_step(Clients[client_id].cfg)
+                    early_stop_limits[client_id] = random.randint(1, max(1, max_steps-1))
+                elif Server.cfg.federated.sync_type == 'epoch':
+                    max_epochs = Clients[client_id].cfg.training.num_epochs_per_comm
+                    early_stop_limits[client_id] = random.randint(1, max(1, max_epochs-1))
         
         for oc in online_clients:
             Clients[oc].model.load_state_dict(Server.model.state_dict())
@@ -174,11 +192,18 @@ def train_and_validate_federated_centered(Clients, Server):
                     # reset load time for the tracker.
                     tracker['start_load_time'] = time.time()
                     # model_local = deepcopy(model_client)
+
+                    # Check if this client should stop early
+                    if oc in early_stop_limits:
+                        if (Server.cfg.federated.sync_type == 'local_step' and local_steps >= early_stop_limits[oc]) or \
+                           (Server.cfg.federated.sync_type == 'epoch' and Clients[oc].cfg.epoch_ >= early_stop_limits[oc]):
+                            is_sync = True
+                            break
+
+                    # Original sync check
                     is_sync = is_sync_fed(Clients[oc].cfg)
                     if is_sync:
                         break
-
-
 
             do_validate_centered(Clients[oc].cfg, Clients[oc].model, Clients[oc].criterion, Clients[oc].metrics, Clients[oc].optimizer,
                  Clients[oc].train_loader, Server.local_val_tracker, val=False, local=True)

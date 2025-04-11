@@ -177,6 +177,7 @@ class ServerCentered(Node):
     
     def enable_grad(self,dataloader):
         # Initialize the grad on model params
+        self.model.train()
         dataiter = iter(dataloader)
         _input, _target = next(dataiter)
         _input, _target = _load_data_batch(self.cfg, _input, _target)
@@ -184,7 +185,8 @@ class ServerCentered(Node):
         output = self.model(_input)
         loss = self.criterion(output, _target)
         loss.backward()
-        self.optimizer.zero_grad()
+        self.optimizer.zero_grad(set_to_none=False)
+        assert next(self.model.parameters()).grad is not None
         return
     
 
